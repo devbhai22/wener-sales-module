@@ -1,0 +1,38 @@
+LIST OF ALL QUERIES
+
+Order Creations
+1. OrderCreatedByTSO
+2. OrderCreatedByZM
+3. OrderCreatedByDM
+4. OrderCreatedByChairman
+
+Order Approvals
+5. OrderApprovedByZM
+6. OrderApprovedByDM
+7. OrderApprovedByChairman
+8. OrderApprovedByIM
+9. OrderApprovedByAM
+
+Order Rejections
+10. OrderRejectedByZM
+11. OrderRejectedByDM
+12. OrderRejectedByChairman
+13. OrderRejectedByIM
+
+Invoice Edits
+14. InvoiceEditedByIM
+
+Request Product Returns
+15. ReturnRequestedByTSO
+16. ReturnRequestedByZM
+17. ReturnRequestedByDM
+18. ReturnRequestedByChairman
+
+Approve Product Returns
+19. ReturnApprovedByZM
+20. ReturnApprovedByDM
+21. ReturnApprovedByChairman
+22. ReturnApprovedByIM
+
+Transaction
+23. TransactionApprovedByAM
