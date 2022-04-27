@@ -123,6 +123,9 @@ const OrderDetailsCard = ({ id }) => {
                         <span style={{ color: '#525252' }}>Distributor Name : </span>
                         {distributor.business_name}</strong>
                     <strong className="text-muted d-block mt-1">
+                        <span style={{ color: '#525252' }}>Distributor Location : </span>
+                        {distributor.territory_name}</strong>
+                    <strong className="text-muted d-block mt-1">
                         <span style={{ color: '#525252' }}>Distributor Credit Limit : </span>
                         {distributor.credit_limit}</strong>
                     <strong className="text-muted d-block mt-1">
