@@ -33,11 +33,6 @@ export default function () {
       to: "/orders",
     },
     {
-      title: "Pending Orders",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/pending-orders",
-    },
-    {
       title: "Returned Orders",
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/returned-orders",
