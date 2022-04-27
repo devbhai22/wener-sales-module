@@ -31,6 +31,7 @@ const Orders = () => {
       let { data: orders, error } = await supabase
         .from('orders')
         .select("*")
+        .or('status.eq."Approved By DM",status.eq."Order Dispatched",status.eq."Rejected By IM"')
       if (error) {
         console.log(error)
       }
@@ -50,14 +51,14 @@ const Orders = () => {
       style: {
         textAlign: "center"
       },
-      Cell: props => {
-        console.log(props.original.id);
-        return (
-          <span> {props.original.id} </span>
-        )
+      accessor: "id"
+    },
+    {
+      Header: "Date",
+      style: {
+        textAlign: "center"
       },
-      width: 70,
-
+      accessor: "invoice_data.create_date"
     },
     {
       Header: "Dealer Name",
@@ -71,17 +72,50 @@ const Orders = () => {
       style: {
         textAlign: "center"
       },
-      Cell: props => {
-        return (
-          <span> {props.original.invoice_data.net_total} </span>
-        )
-      },
+      accessor: "invoice_data.net_total"
     },
     {
       Header: "Status",
       accessor: "status",
       style: {
-        textAlign: "center"
+        textAlign: "center",
+      },
+      Cell: props => {
+          if(props.original.status == "Created By DM"){
+            return(
+              <span
+              style = {{color: '#33cc33'}}
+              > {props.original.status}
+              </span>
+            )
+          }
+          else if(props.original.status == "Approved By DM"){
+            return(
+              <span
+              style = {{color: '#ffcc00'}}
+              > {props.original.status}
+              </span>
+            )
+          }
+          else if(props.original.status == "Rejected By IM"){
+            return(
+              <span
+              style = {{color: '#ff3300'}}
+              > {props.original.status}
+              </span>
+            )
+          }
+          else if(props.original.status == "Order Dispatched"){
+            return(
+              <span
+              style = {{color: '#33cc33'}}
+              > {props.original.status}
+              </span>
+            )
+          }
+          else{
+            return(<span>{props.original.status}</span>)
+          }
       },
     },
 
@@ -128,6 +162,7 @@ const Orders = () => {
           className="-striped -highlight"
           data={posts}
           filterable
+          sortable = {true}
           columns={columns}
           defaultPageSize={10}
           style={{ background: 'white' }}
