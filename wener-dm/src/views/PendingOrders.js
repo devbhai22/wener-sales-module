@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom"
-import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
+import { Container, Row } from "shards-react";
 import PageTitle from "../components/common/PageTitle";
-import TableComponent from "../components/Table/TableComponent";
 import supabase from '../utils/supabase'
 import ReactTable from "react-table";
 import 'react-table/react-table.css'
-import ExportToExcel from "../components/Table/ExportToExcel";
 
 const Orders = () => {
   const [posts, setPosts] = useState([])

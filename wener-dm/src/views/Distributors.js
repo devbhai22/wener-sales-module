@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom"
-import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
+import { Container, Row } from "shards-react";
 import PageTitle from "../components/common/PageTitle";
-import TableComponent from "../components/Table/TableComponent";
 import supabase from '../utils/supabase'
 import ReactTable from "react-table";
 import 'react-table/react-table.css'
-import ExportToExcel from "../components/Table/ExportToExcel";
 
 const Distributors = () => {
   const [posts, setPosts] = useState([])
@@ -73,15 +71,26 @@ const Distributors = () => {
     },
     {
       Header: "Business Type",
-      accessor: "business_type"
+      accessor: "business_type",
+      style: {
+        textAlign: "center"
+      },
+      width: 100
     },
     {
-      Header: "Address",
-      accessor: "address"
+      Header: "Present Address",
+      accessor: "present_address",
+      style: {
+        textAlign: "center"
+      },
+      width: 400
     },
     {
       Header: "Phone Number",
-      accessor: "phone"
+      accessor: "phone",
+      style: {
+        textAlign: "center"
+      },
     },
     {
       Header: "Actions",

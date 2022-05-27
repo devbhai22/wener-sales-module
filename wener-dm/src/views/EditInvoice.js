@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import {
   ListGroup,
   ListGroupItem,
@@ -16,23 +16,34 @@ import supabase from "../utils/supabase";
 import PageTitle from "../components/common/PageTitle";
 import ProductForm from "./ProductForm";
 import ProductList from "./ProductList";
-import InvoiceInfo from "./InvoiceInfo";
-var numeral = require('numeral');
 
-const CreateInvoice = () => {
+const EditInvoice = () => {
+  let orderid = useParams();
+
   //Invoice meta data
   const [distributorId, setDistributorId] = useState("");
   const [distributorName, setDistributorName] = useState("");
   const [distributorList, setDistributorList] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState("Bkash");
+  const [paymentMethods, setPaymentMethods] = useState([
+    "Bkash",
+    "Cheque",
+    "Cash",
+    "Mobile banking"
+  ]);
+  const [paymentSlipName, setPaymentSlipName] = useState("");
+  const [paymentSlipPath, setPaymentSlipPath] = useState(null);
   const [initialCredit, setInitialCredit] = useState(0);
   const [credit, setCredit] = useState(0);
   const [creditLimit, setCreditLimit] = useState(0);
   const [invoiceItems, setInvoiceItems] = useState([]);
+  const [transportName, setTransportName] = useState("");
+  const [transportAddress, setTransportAddress] = useState("");
+  const [notes, setNotes] = useState("");
   const [profile, setProfile] = useState({});
 
   //Edit invoice state
   const [editing, setEditing] = useState(false);
-  const [invoiceInfo, setInvoiceInfo] = useState([]);
 
   //Totals
   const [grossTotal, setGrossTotal] = useState(0);
@@ -47,7 +58,7 @@ const CreateInvoice = () => {
     let total = 0;
     for (let i = 0; i < invoiceItems.length; i++) {
       if (invoiceItems[i].rate && invoiceItems[i].quantity) {
-        total = total + invoiceItems[i].total_amount;
+        total = total + invoiceItems[i].rate * invoiceItems[i].quantity;
       }
     }
     setGrossTotal(total);
@@ -62,7 +73,7 @@ const CreateInvoice = () => {
 
     let prevNet = netTotal;
     let net = total - totalDis;
-    setNetTotal(numeral(net).format("0[.]00"));
+    setNetTotal(net);
 
     if (prevNet != net) {
       let totalCredit = initialCredit + net;
@@ -88,6 +99,35 @@ const CreateInvoice = () => {
     }
   }
 
+  //upload document
+  const uploadDocument = async (event, documentType) => {
+    try {
+      if (!event.target.files || event.target.files.length == 0) {
+        throw "You must select an image to upload.";
+      }
+
+      const file = event.target.files[0];
+      const fileExt = file.name.split(".").pop();
+      const fileName = file.name.split(".")[0];
+      const filePath = `flreew_0/${file.name}${Math.random()}.${fileExt}`;
+
+      let { error: uploadError } = await supabase.storage
+        .from("documents")
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      if (documentType == "paymentSlip") {
+        setPaymentSlipName(fileName);
+        setPaymentSlipPath(filePath);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   // create invoice
   async function handleInvoiceCreation(e) {
     e.preventDefault();
@@ -96,13 +136,13 @@ const CreateInvoice = () => {
         initial_credit: initialCredit,
         create_date: new Date().toLocaleString("en-UK"),
         invoice_id: "p" + new Date().getTime(),
-        payment_method: invoiceInfo[3],
-        transport_name: invoiceInfo[0],
-        transport_address: invoiceInfo[1],
+        payment_method: paymentMethod,
+        transport_name: transportName,
+        transport_address: transportAddress,
         products: invoiceItems,
-        picture_name: invoiceInfo[4],
-        picture_path: invoiceInfo[5],
-        notes: invoiceInfo[2],
+        picture_name: paymentSlipName,
+        picture_path: paymentSlipPath,
+        notes: notes,
         gross_total: grossTotal,
         total_discount: totalDiscount,
         net_total: netTotal
@@ -118,7 +158,7 @@ const CreateInvoice = () => {
 
       const { data, error } = await supabase.from("order_events").insert([
         {
-          name: "OrderCreatedByDM",
+          name: "OrderEditedByDM",
           created_by: profile.id,
           data: eventData
         }
@@ -141,8 +181,62 @@ const CreateInvoice = () => {
   }
 
   useEffect(() => {
+    //User profile information
+    async function fetchData() {
+      let { data: profile, error1 } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id);
+      if (error1) {
+        console.log(error1);
+      } else {
+        setProfile(profile[0]);
+        console.log(profile[0]);
+      }
+
+      let { data, error3 } = await supabase
+        .from('orders')
+        .select("*")
+        .eq('id', orderid.id)
+      if (error3) {
+        console.log(error3)
+      }
+      else {
+        setInvoiceItems(data[0].invoice_data.products)
+        setPaymentMethod(data[0].invoice_data.payment_method)
+        setPaymentSlipName(data[0].invoice_data.picture_name ? data[0].invoice_data.picture_name.split('.')[0] : '')
+        setPaymentSlipName(data[0].invoice_data.picture_path)
+        setDistributorId(data[0].distributor_id)
+        setGrossTotal(data[0].invoice_data.gross_total)
+        setNetTotal(data[0].invoice_data.net_total)
+        setInitialCredit(data[0].invoice_data.initial_credit)
+        setTotalDiscount(data[0].invoice_data.total_discount)
+        setTransportName(data[0].invoice_data.transport_name)
+        setTransportAddress(data[0].invoice_data.transport_address)
+        setNotes(data[0].invoice_data.notes)
+      }
+
+      //Distributors working under user
+      let { data: distributors, error } = await supabase
+        .from("distributors")
+        .select("*")
+        .eq("division_id", profile[0]["works_at"]);
+      if (error) {
+        console.log(error);
+      } else {
+        setDistributorList(distributors);
+        console.log(distributors);
+      }
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     //Set distributor credit limit
     async function fetchData() {
+      console.log(distributorName)
+      console.log(distributorId)
+      console.log(distributorName)
       if (distributorId) {
         let { data: distributors, error } = await supabase
           .from("distributors")
@@ -160,37 +254,6 @@ const CreateInvoice = () => {
     }
     fetchData();
   }, [distributorId]);
-
-  useEffect(() => {
-    async function fetchData() {
-      //User profile information
-      let { data: profile, error1 } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id);
-      if (error1) {
-        console.log(error1);
-      } else {
-        setProfile(profile[0]);
-      }
-
-      //Distributors working under user
-      let { data: distributors, error } = await supabase
-        .from("distributors")
-        .select("*")
-        .eq("division_id", profile[0]["works_at"]);
-      if (error) {
-        console.log(error);
-      } else {
-        setDistributorList(distributors);
-        if (distributors.length > 0) {
-          setDistributorId(distributors[0].id);
-          setCreditLimit(distributors[0].credit_limit);
-        }
-      }
-    }
-    fetchData();
-  }, []);
 
   useEffect(() => {
     handleNetTotal();
@@ -248,18 +311,76 @@ const CreateInvoice = () => {
                   <FormInput id="feInputZip" value={creditLimit} disabled />
                 </Col>
               </Row>
+              
+              <hr style = {{border: "none", height: "1px", backgroundColor: "#333"}}/>
 
-              <hr
-                style={{
-                  border: "none",
-                  height: "1px",
-                  backgroundColor: "#333"
-                }}
+              <Row className="mt-4">
+                <Col className="mb-2">
+                  <label htmlFor="feInputName">Upload Payment Slip</label>
+                  <div className="custom-file">
+                    <input
+                      type="file"
+                      accept=".png,.jpg,.pdf"
+                      className="custom-file-input"
+                      id="customFile2"
+                      onChange={e => uploadDocument(e, "paymentSlip")}
+                    />
+                    <label
+                      className="custom-file-label"
+                      htmlFor="customFile2"
+                    >
+                      {paymentSlipName ? paymentSlipName : "Choose file..."}
+                    </label>
+                  </div>
+                  </Col>
+                  <Col>
+                  <label htmlFor="paymentMethod">Choose Payment Method</label>
+                  <FormSelect
+                    id="paymentMethod"
+                    value={paymentMethod}
+                    onChange={e => {
+                      setPaymentMethod(e.target.value);
+                    }}
+                  >
+                    {paymentMethods
+                      ? paymentMethods.map(thisPaymentMethod => (
+                          <option
+                            key={thisPaymentMethod}
+                            value={thisPaymentMethod}
+                          >
+                            {thisPaymentMethod}
+                          </option>
+                        ))
+                      : null}
+                  </FormSelect>
+                  </Col>
+                </Row>
+              <Row className="mt-2">
+                <Col className="mb-2">
+                  <label htmlFor="transporttName">Transport Name</label>
+                  <FormInput
+                    name="transportName"
+                    onChange={e => setTransportName(e.target.value)}
+                    value={transportName}
+                  />
+                </Col>
+                <Col>
+                  <label htmlFor="transporttName">Transport Address</label>
+                  <FormInput
+                    name="transportAddress"
+                    onChange={e => setTransportAddress(e.target.value)}
+                    value={transportAddress}
+                  />
+                </Col>
+              </Row>
+              <label htmlFor="notes">Notes</label>
+              <FormTextarea
+                id="notes"
+                placeholder="Notes"
+                type="text"
+                value={notes}
+                onChange={e => setNotes(e.target.value)}
               />
-              <InvoiceInfo
-                invoiceInfo={invoiceInfo}
-                setInvoiceInfo={setInvoiceInfo}
-              ></InvoiceInfo>
               <br></br>
 
               <Row form className="mt-1" style={{ alignItems: "flex-end" }}>
@@ -290,7 +411,7 @@ const CreateInvoice = () => {
                   }
                 }}
               >
-                Create Invoice
+                Update Invoice
               </Button>
             </Form>
           </ListGroupItem>
@@ -300,4 +421,4 @@ const CreateInvoice = () => {
   );
 };
 
-export default CreateInvoice;
+export default EditInvoice;
