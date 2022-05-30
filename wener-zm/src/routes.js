@@ -18,6 +18,7 @@ import OrderDetails from "./views/OrderDetails";
 import ReturnRequest from "./views/ReturnRequest"
 import PendingOrders from "./views/PendingOrders"
 import EditInvoice from "./views/EditInvoice"
+import EditDistributor from "./views/EditDistributor"
 
 
 export default [
@@ -83,6 +84,12 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: ReturnRequest
+  },
+  {
+    path: "/distributors/:id/edit",
+    layout: DefaultLayout,
+    exact: true,
+    component: EditDistributor
   },
   {
     path: "/my-profile",
