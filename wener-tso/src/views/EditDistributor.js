@@ -28,10 +28,11 @@ const EditDistributor = ({ match }) => {
 
     const [businessName, setBusinessName] = useState('');
     const [proprietorName, setProprietorName] = useState('');
-    const [address, setAddress] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
     const [businessType, setBusinessType] = useState('A')
     const [creditLimit, setCreditLimit] = useState(0)
+    const [permanentAddress, setPermanentAddress] = useState('')
+    const [presentAddress, setPresentAddress] = useState('')
 
     //documents
     const [photoPath, setPhotoPath] = useState(null)
@@ -88,7 +89,8 @@ const EditDistributor = ({ match }) => {
 
                 setBusinessName(distributors[0].business_name)
                 setProprietorName(distributors[0].proprietor_name)
-                setAddress(distributors[0].address)
+                setPresentAddress(distributors[0].present_address)
+                setPermanentAddress(distributors[0].permanent_address)
                 setPhoneNumber(distributors[0].phone)
                 setBusinessType(distributors[0].business_type)
                 setCreditLimit(distributors[0].credit_limit)
@@ -128,7 +130,8 @@ const EditDistributor = ({ match }) => {
             .update({
                 business_name: businessName,
                 proprietor_name: proprietorName,
-                address: address,
+                permanent_address: permanentAddress,
+                present_address: presentAddress,
                 phone: phoneNumber,
                 business_type: businessType,
                 credit_limit: creditLimit,
@@ -273,9 +276,14 @@ const EditDistributor = ({ match }) => {
                                                 />
                                             </FormGroup>
                                             <FormGroup>
-                                                <label htmlFor="feInputAddress">Address</label>
-                                                <FormInput id="feInputAddress" placeholder="Enter dealer's address" value={address} onChange={(e) => { setAddress(e.target.value) }} />
+                                                <label htmlFor="feInputAddress">Present address</label>
+                                                <FormInput id="feInputAddress" placeholder="Enter dealer's address" value={presentAddress} onChange={(e) => { setPresentAddress(e.target.value) }} />
                                             </FormGroup>
+                                            <FormGroup>
+                                                <label htmlFor="feInputAddress">Permanent address</label>
+                                                <FormInput id="feInputAddress" placeholder="Enter dealer's address" value={permanentAddress} onChange={(e) => { setPermanentAddress(e.target.value) }} />
+                                            </FormGroup>
+
 
                                             <FormGroup>
                                                 <label htmlFor="feInputTel">Credit Limit</label>
