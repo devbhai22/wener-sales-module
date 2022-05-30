@@ -3,6 +3,10 @@ import {
   Card,
   CardHeader,
   ListGroupItem,
+  Col,
+  Row,
+  Button,
+  ButtonGroup
 } from "shards-react";
 import { useHistory } from "react-router-dom";
 import supabase from "../utils/supabase";
@@ -10,7 +14,8 @@ import Loading from "../components/Loading/Loading";
 
 const DistributorDetailsCard = ({ id }) => {
   const [distributor, setDistributor] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState('true');
+  const [editAccess, setEditAccess] = useState('false');
 
   const history = useHistory();
 
@@ -24,12 +29,48 @@ const DistributorDetailsCard = ({ id }) => {
         console.log(error);
       } else {
         setDistributor(distributors[0]);
-        console.log(distributors);
+        setEditAccess(distributors[0].edit_access)
       }
       setLoading(false);
     }
     fetchData();
   }, []);
+
+  //Give
+  async function handleAccessClick(event) {
+    event.preventDefault();
+
+    const { data, error } = await supabase
+      .from("distributors")
+      .update({
+        edit_access: 'true'
+      })
+      .eq("id", parseInt(id));
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(editAccess);
+    }
+    setEditAccess('true');
+  }
+
+  //Restrain
+  async function handleAccessClick2(event) {
+    event.preventDefault();
+
+    const { data, error } = await supabase
+      .from("distributors")
+      .update({
+        edit_access: 'false'
+      })
+      .eq("id", parseInt(id));
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(editAccess);
+    }
+    setEditAccess('false');
+  }
 
   if (loading) {
     return <Loading></Loading>;
@@ -235,18 +276,40 @@ const DistributorDetailsCard = ({ id }) => {
             </button>
           </a>
         )}
-
-        <ListGroupItem className="p-0" style={{ border: "none" }}>
-          <button
-            className="btn btn-info d-block m-4 mx-auto"
-            type="button"
-            onClick={() => {
-              history.push(`/distributors/${id}/edit`);
-            }}
-          >
-            Edit Dealer
-          </button>
-        </ListGroupItem>
+        <Row className="m-4">
+          <ButtonGroup>
+            <Button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => {
+                history.push(`/distributors/${id}/edit`);
+              }}
+            >
+              Edit Dealer
+            </Button>
+            {editAccess == 'true' ?
+            (
+              <Button
+                className="btn btn-info"
+                type="button"
+                onClick={handleAccessClick2}
+              >
+                Restrain Edit Access
+              </Button>
+            )
+            :
+            (
+              <Button
+                style={{ backgroundColor: "#1f99e0" }}
+                type="button"
+                onClick={handleAccessClick}
+              >
+                Give Edit Access
+              </Button>
+            )
+          }
+          </ButtonGroup>
+        </Row>
       </CardHeader>
     </Card>
   );

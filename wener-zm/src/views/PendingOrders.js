@@ -62,6 +62,13 @@ const Orders = () => {
 
     },
     {
+      Header: "Date created",
+      style: {
+        textAlign: "center"
+      },
+      accessor: "invoice_data.create_date"
+    },
+    {
       Header: "Dealer Name",
       accessor: "distributor_name",
       style: {

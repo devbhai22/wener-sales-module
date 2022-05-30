@@ -76,15 +76,25 @@ const Distributors = () => {
     },
     {
       Header: "Business Type",
-      accessor: "business_type"
+      accessor: "business_type",
+      style: {
+        textAlign: "center"
+      },
+      width: 100
     },
     {
-      Header: "Address",
-      accessor: "address"
+      Header: "Present Address",
+      accessor: "present_address",
+      style: {
+        textAlign: "center"
+      }
     },
     {
       Header: "Phone Number",
-      accessor: "phone"
+      accessor: "phone",
+      style: {
+        textAlign: "center"
+      }
     },
     {
       Header: "Actions",

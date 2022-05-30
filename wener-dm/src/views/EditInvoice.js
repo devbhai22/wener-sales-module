@@ -16,6 +16,7 @@ import supabase from "../utils/supabase";
 import PageTitle from "../components/common/PageTitle";
 import ProductForm from "./ProductForm";
 import ProductList from "./ProductList";
+import InvoiceInfo from "./InvoiceInfo";
 
 const EditInvoice = () => {
   let orderid = useParams();
@@ -24,26 +25,16 @@ const EditInvoice = () => {
   const [distributorId, setDistributorId] = useState("");
   const [distributorName, setDistributorName] = useState("");
   const [distributorList, setDistributorList] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState("Bkash");
-  const [paymentMethods, setPaymentMethods] = useState([
-    "Bkash",
-    "Cheque",
-    "Cash",
-    "Mobile banking"
-  ]);
-  const [paymentSlipName, setPaymentSlipName] = useState("");
-  const [paymentSlipPath, setPaymentSlipPath] = useState(null);
   const [initialCredit, setInitialCredit] = useState(0);
   const [credit, setCredit] = useState(0);
   const [creditLimit, setCreditLimit] = useState(0);
   const [invoiceItems, setInvoiceItems] = useState([]);
-  const [transportName, setTransportName] = useState("");
-  const [transportAddress, setTransportAddress] = useState("");
-  const [notes, setNotes] = useState("");
   const [profile, setProfile] = useState({});
 
   //Edit invoice state
   const [editing, setEditing] = useState(false);
+  const [error, setError] = useState({})
+  const [invoiceInfo, setInvoiceInfo] = useState({})
 
   //Totals
   const [grossTotal, setGrossTotal] = useState(0);
@@ -99,66 +90,37 @@ const EditInvoice = () => {
     }
   }
 
-  //upload document
-  const uploadDocument = async (event, documentType) => {
-    try {
-      if (!event.target.files || event.target.files.length == 0) {
-        throw "You must select an image to upload.";
-      }
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
-      const fileName = file.name.split(".")[0];
-      const filePath = `flreew_0/${file.name}${Math.random()}.${fileExt}`;
-
-      let { error: uploadError } = await supabase.storage
-        .from("documents")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      if (documentType == "paymentSlip") {
-        setPaymentSlipName(fileName);
-        setPaymentSlipPath(filePath);
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
   // create invoice
   async function handleInvoiceCreation(e) {
     e.preventDefault();
-    if (window.confirm("Are you sure you want to proceed?")) {
+    if (Object.keys(error).length === 0) {
+      if (window.confirm("Are you sure you want to proceed?")) {
       const invoiceData = {
         initial_credit: initialCredit,
         create_date: new Date().toLocaleString("en-UK"),
         invoice_id: "p" + new Date().getTime(),
-        payment_method: paymentMethod,
-        transport_name: transportName,
-        transport_address: transportAddress,
+        payment_method: invoiceInfo.payment_method,
+        transport_name: invoiceInfo.transport_name,
+        transport_address: invoiceInfo.transport_address,
         products: invoiceItems,
-        picture_name: paymentSlipName,
-        picture_path: paymentSlipPath,
-        notes: notes,
+        picture_name: invoiceInfo.payment_slip_name,
+        picture_path: invoiceInfo.payment_slip_path,
+        notes: invoiceInfo.notes,
         gross_total: grossTotal,
         total_discount: totalDiscount,
         net_total: netTotal
       };
       const eventData = {
-        territory_id: profile.works_at,
+        division_id: profile.works_at,
         distributor_id: distributorId,
         distributor_name: distributorName,
         invoice_data: invoiceData
       };
 
-      console.log(eventData);
 
       const { data, error } = await supabase.from("order_events").insert([
         {
-          name: "OrderEditedByDM",
+          name: "OrderCreatedByDM",
           created_by: profile.id,
           data: eventData
         }
@@ -175,10 +137,14 @@ const EditInvoice = () => {
         setNetTotal(0);
         setGrossTotal(0);
       }
-    } else {
+    }else {
       e.preventDefault();
     }
+  } else {
+    alert("Errors exist in the form.");
   }
+}
+  
 
   useEffect(() => {
     //User profile information
@@ -202,18 +168,22 @@ const EditInvoice = () => {
         console.log(error3)
       }
       else {
+        setInvoiceInfo(
+          {
+            payment_method: data[0].invoice_data.payment_method,
+            payment_slip_name: data[0].invoice_data.picture_name ? data[0].invoice_data.picture_name.split('.')[0] : '',
+            payment_slip_path: data[0].invoice_data.picture_path,
+            transport_name: data[0].invoice_data.transport_name,
+            transport_address: data[0].invoice_data.transport_address,
+            notes: data[0].invoice_data.notes
+          }
+        )
         setInvoiceItems(data[0].invoice_data.products)
-        setPaymentMethod(data[0].invoice_data.payment_method)
-        setPaymentSlipName(data[0].invoice_data.picture_name ? data[0].invoice_data.picture_name.split('.')[0] : '')
-        setPaymentSlipName(data[0].invoice_data.picture_path)
         setDistributorId(data[0].distributor_id)
         setGrossTotal(data[0].invoice_data.gross_total)
         setNetTotal(data[0].invoice_data.net_total)
         setInitialCredit(data[0].invoice_data.initial_credit)
         setTotalDiscount(data[0].invoice_data.total_discount)
-        setTransportName(data[0].invoice_data.transport_name)
-        setTransportAddress(data[0].invoice_data.transport_address)
-        setNotes(data[0].invoice_data.notes)
       }
 
       //Distributors working under user
@@ -257,6 +227,10 @@ const EditInvoice = () => {
 
   useEffect(() => {
     handleNetTotal();
+  });
+
+  useEffect(() => {
+    console.log(invoiceInfo)
   });
 
   return (
@@ -312,81 +286,24 @@ const EditInvoice = () => {
                 </Col>
               </Row>
               
-              <hr style = {{border: "none", height: "1px", backgroundColor: "#333"}}/>
-
-              <Row className="mt-4">
-                <Col className="mb-2">
-                  <label htmlFor="feInputName">Upload Payment Slip</label>
-                  <div className="custom-file">
-                    <input
-                      type="file"
-                      accept=".png,.jpg,.pdf"
-                      className="custom-file-input"
-                      id="customFile2"
-                      onChange={e => uploadDocument(e, "paymentSlip")}
-                    />
-                    <label
-                      className="custom-file-label"
-                      htmlFor="customFile2"
-                    >
-                      {paymentSlipName ? paymentSlipName : "Choose file..."}
-                    </label>
-                  </div>
-                  </Col>
-                  <Col>
-                  <label htmlFor="paymentMethod">Choose Payment Method</label>
-                  <FormSelect
-                    id="paymentMethod"
-                    value={paymentMethod}
-                    onChange={e => {
-                      setPaymentMethod(e.target.value);
-                    }}
-                  >
-                    {paymentMethods
-                      ? paymentMethods.map(thisPaymentMethod => (
-                          <option
-                            key={thisPaymentMethod}
-                            value={thisPaymentMethod}
-                          >
-                            {thisPaymentMethod}
-                          </option>
-                        ))
-                      : null}
-                  </FormSelect>
-                  </Col>
-                </Row>
-              <Row className="mt-2">
-                <Col className="mb-2">
-                  <label htmlFor="transporttName">Transport Name</label>
-                  <FormInput
-                    name="transportName"
-                    onChange={e => setTransportName(e.target.value)}
-                    value={transportName}
-                  />
-                </Col>
-                <Col>
-                  <label htmlFor="transporttName">Transport Address</label>
-                  <FormInput
-                    name="transportAddress"
-                    onChange={e => setTransportAddress(e.target.value)}
-                    value={transportAddress}
-                  />
-                </Col>
-              </Row>
-              <label htmlFor="notes">Notes</label>
-              <FormTextarea
-                id="notes"
-                placeholder="Notes"
-                type="text"
-                value={notes}
-                onChange={e => setNotes(e.target.value)}
+              <hr
+                style={{
+                  border: "none",
+                  height: "1px",
+                  backgroundColor: "#333"
+                }}
               />
+              <InvoiceInfo
+                invoiceInfo={invoiceInfo}
+                setInvoiceInfo={setInvoiceInfo}
+              ></InvoiceInfo>
               <br></br>
 
               <Row form className="mt-1" style={{ alignItems: "flex-end" }}>
                 <ProductForm
                   invoiceItems={invoiceItems}
                   setInvoiceItems={setInvoiceItems}
+                  setError = {setError}
                 ></ProductForm>
                 <ProductList
                   handleNetTotal={handleNetTotal}
@@ -394,6 +311,8 @@ const EditInvoice = () => {
                   setInvoiceItems={setInvoiceItems}
                   editing={editing}
                   setEditing={setEditing}
+                  error = {error}
+                  setError = {setError}
                 ></ProductList>
               </Row>
 

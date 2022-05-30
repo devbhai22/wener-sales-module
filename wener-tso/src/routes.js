@@ -16,6 +16,8 @@ import Orders from "./views/Orders";
 import DistributorDetails from "./views/DistributorDetails";
 import OrderDetails from "./views/OrderDetails";
 import ReturnRequest from "./views/ReturnRequest";
+import EditDistributor from "./views/EditDistributor";
+import EditInvoice from "./views/EditInvoice";
 
 
 export default [
@@ -65,6 +67,12 @@ export default [
     component: OrderDetails
   },
   {
+    path: "/orders/:id/edit",
+    layout: DefaultLayout,
+    exact: true,
+    component: EditInvoice
+  },
+  {
     path: "/orders/:id/return-products",
     layout: DefaultLayout,
     exact: true,
@@ -87,6 +95,12 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: Logout
+  },
+  {
+    path: "/distributors/:id/edit",
+    layout: DefaultLayout,
+    exact: true,
+    component: EditDistributor
   },
   {
     path: "/dashboard",

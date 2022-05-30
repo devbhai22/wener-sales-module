@@ -285,8 +285,8 @@ const CreateDistributor = () => {
                           <FormSelect id="feInputState" value={businessType} onChange={(e) => setBusinessType(e.target.value)}>
                             <option style={{ height: '20px' }} value="A">A</option>
                             <option value="B">B</option>
-                            <option value="B">C</option>
-                            <option value="B">D</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
                           </FormSelect>
                         </Col>
                       </Row>

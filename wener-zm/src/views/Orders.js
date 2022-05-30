@@ -51,14 +51,14 @@ const Orders = () => {
       style: {
         textAlign: "center"
       },
-      Cell: props => {
-        console.log(props.original.id);
-        return (
-          <span> {props.original.id} </span>
-        )
+      accessor: "id"
+    },
+    {
+      Header: "Date created",
+      style: {
+        textAlign: "center"
       },
-      width: 70,
-
+      accessor: "invoice_data.create_date"
     },
     {
       Header: "Dealer Name",
@@ -69,6 +69,14 @@ const Orders = () => {
     },
     {
       Header: "Total Amount",
+      style: {
+        textAlign: "center"
+      },
+      accessor: "invoice_data.net_total"
+    },
+    {
+      Header: "Status",
+      accessor: "status",
       style: {
         textAlign: "center"
       },

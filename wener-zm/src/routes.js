@@ -17,7 +17,7 @@ import DistributorDetails from "./views/DistributorDetails";
 import OrderDetails from "./views/OrderDetails";
 import ReturnRequest from "./views/ReturnRequest"
 import PendingOrders from "./views/PendingOrders"
-import EditOrder from "./views/EditOrder"
+import EditInvoice from "./views/EditInvoice"
 
 
 export default [
@@ -70,7 +70,7 @@ export default [
     path: "/orders/:id/edit",
     layout: DefaultLayout,
     exact: true,
-    component: EditOrder
+    component: EditInvoice
   },
   {
     path: "/orders/:id",

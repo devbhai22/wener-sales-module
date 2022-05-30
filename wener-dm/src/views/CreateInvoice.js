@@ -9,15 +9,14 @@ import {
   FormInput,
   FormSelect,
   Button,
-  Container,
-  FormTextarea
+  Container
 } from "shards-react";
 import supabase from "../utils/supabase";
 import PageTitle from "../components/common/PageTitle";
 import ProductForm from "./ProductForm";
 import ProductList from "./ProductList";
 import InvoiceInfo from "./InvoiceInfo";
-var numeral = require('numeral');
+var numeral = require("numeral");
 
 const CreateInvoice = () => {
   //Invoice meta data
@@ -29,6 +28,8 @@ const CreateInvoice = () => {
   const [creditLimit, setCreditLimit] = useState(0);
   const [invoiceItems, setInvoiceItems] = useState([]);
   const [profile, setProfile] = useState({});
+
+  const [error, setError] = useState("");
 
   //Edit invoice state
   const [editing, setEditing] = useState(false);
@@ -84,59 +85,63 @@ const CreateInvoice = () => {
       setDistributorName(distributors[0].business_name);
       setCreditLimit(distributors[0].credit_limit);
       setInitialCredit(distributors[0].credit);
-      setCredit(distributors[0].credit + netTotal);
+      setCredit(Number(distributors[0].credit) + Number(netTotal));
     }
   }
 
   // create invoice
   async function handleInvoiceCreation(e) {
     e.preventDefault();
-    if (window.confirm("Are you sure you want to proceed?")) {
-      const invoiceData = {
-        initial_credit: initialCredit,
-        create_date: new Date().toLocaleString("en-UK"),
-        invoice_id: "p" + new Date().getTime(),
-        payment_method: invoiceInfo[3],
-        transport_name: invoiceInfo[0],
-        transport_address: invoiceInfo[1],
-        products: invoiceItems,
-        picture_name: invoiceInfo[4],
-        picture_path: invoiceInfo[5],
-        notes: invoiceInfo[2],
-        gross_total: grossTotal,
-        total_discount: totalDiscount,
-        net_total: netTotal
-      };
-      const eventData = {
-        territory_id: profile.works_at,
-        distributor_id: distributorId,
-        distributor_name: distributorName,
-        invoice_data: invoiceData
-      };
+    if (Object.keys(error).length === 0) {
+      if (window.confirm("Are you sure you want to proceed?")) {
+        const invoiceData = {
+          initial_credit: initialCredit,
+          create_date: new Date().toLocaleString("en-UK"),
+          invoice_id: "p" + new Date().getTime(),
+          payment_method: invoiceInfo.payment_method,
+          transport_name: invoiceInfo.transport_name,
+          transport_address: invoiceInfo.transport_address,
+          products: invoiceItems,
+          picture_name: invoiceInfo.payment_slip_name,
+          picture_path: invoiceInfo.payment_slip_path,
+          notes: invoiceInfo.notes,
+          gross_total: grossTotal,
+          total_discount: totalDiscount,
+          net_total: netTotal
+        };
+        const eventData = {
+          division_id: profile.works_at,
+          distributor_id: distributorId,
+          distributor_name: distributorName,
+          invoice_data: invoiceData
+        };
 
-      console.log(eventData);
+        console.log(eventData);
 
-      const { data, error } = await supabase.from("order_events").insert([
-        {
-          name: "OrderCreatedByDM",
-          created_by: profile.id,
-          data: eventData
+        const { data, error } = await supabase.from("order_events").insert([
+          {
+            name: "OrderCreatedByDM",
+            created_by: profile.id,
+            data: eventData
+          }
+        ]);
+
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(data);
+          history.push("/orders");
+
+          setInvoiceItems([{}]);
+          setTotalDiscount(0);
+          setNetTotal(0);
+          setGrossTotal(0);
         }
-      ]);
-
-      if (error) {
-        console.log(error);
       } else {
-        console.log(data);
-        history.push("/orders");
-
-        setInvoiceItems([{}]);
-        setTotalDiscount(0);
-        setNetTotal(0);
-        setGrossTotal(0);
+        e.preventDefault();
       }
     } else {
-      e.preventDefault();
+      alert("Errors exist in the form.");
     }
   }
 
@@ -153,7 +158,7 @@ const CreateInvoice = () => {
         } else {
           setDistributorName(distributors[0].business_name);
           setCreditLimit(distributors[0].credit_limit);
-          setCredit(distributors[0].credit + netTotal);
+          setCredit(Number(distributors[0].credit) + Number(netTotal));
           setInitialCredit(distributors[0].credit);
         }
       }
@@ -186,6 +191,8 @@ const CreateInvoice = () => {
         if (distributors.length > 0) {
           setDistributorId(distributors[0].id);
           setCreditLimit(distributors[0].credit_limit);
+          setInitialCredit(distributors[0].credit);
+          setCredit(distributors[0].credit);
         }
       }
     }
@@ -193,6 +200,7 @@ const CreateInvoice = () => {
   }, []);
 
   useEffect(() => {
+    console.log(error);
     handleNetTotal();
   });
 
@@ -266,6 +274,7 @@ const CreateInvoice = () => {
                 <ProductForm
                   invoiceItems={invoiceItems}
                   setInvoiceItems={setInvoiceItems}
+                  setError = {setError}
                 ></ProductForm>
                 <ProductList
                   handleNetTotal={handleNetTotal}
@@ -273,8 +282,29 @@ const CreateInvoice = () => {
                   setInvoiceItems={setInvoiceItems}
                   editing={editing}
                   setEditing={setEditing}
+                  error={error}
+                  setError={setError}
                 ></ProductList>
               </Row>
+              <Col style={{ marginLeft: -10 }}>
+                <Row>
+                  {error.quantity ? (
+                    <div style={{ color: "red" }}>{error.quantity}</div>
+                  ) : null}
+                </Row>
+                <Row>
+                  {error.percentageDiscount ? (
+                    <div style={{ color: "red" }}>
+                      {error.percentageDiscount}
+                    </div>
+                  ) : null}
+                </Row>
+                <Row>
+                  {error.netAmount ? (
+                    <div style={{ color: "red" }}>{error.netAmount}</div>
+                  ) : null}
+                </Row>
+              </Col>
 
               <h5 className="my-2">Gross Total: {grossTotal}</h5>
               <h5 className="my-2">Total Discount: {totalDiscount}</h5>
@@ -301,3 +331,4 @@ const CreateInvoice = () => {
 };
 
 export default CreateInvoice;
+

@@ -179,10 +179,6 @@ const OrderDetailsCard = ({ id }) => {
             {order.invoice_data ? order.invoice_data.transport_address : null}
           </strong>
           <strong className="text-muted d-block">
-            <span style={{ color: "#525252" }}>Status : </span>
-            {order.status}
-          </strong>
-          <strong className="text-muted d-block">
             <span style={{ color: "#525252" }}>Gross Total : </span>
             {order.invoice_data ? order.invoice_data.gross_total : null}
           </strong>
