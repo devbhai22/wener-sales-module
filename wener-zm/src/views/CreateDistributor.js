@@ -28,7 +28,7 @@ const CreateDistributor = () => {
   const [businessName, setBusinessName] = useState('');
   const [proprietorName, setProprietorName] = useState('');
   const [presentAddress, setPresentAddress] = useState('')
-  const [parmanentAddress, setParmanentAddress] = useState('');
+  const [permanentAddress, setPermanentAddress] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('')
   const [businessType, setBusinessType] = useState('A')
   
@@ -119,7 +119,7 @@ const CreateDistributor = () => {
     const { data, error } = await supabase
       .from('distributors')
       .insert([
-        { business_name: businessName, proprietor_name:proprietorName, parmanent_address: parmanentAddress, present_address: presentAddress, phone: phoneNumber, business_type: businessType, territory_id: territoryId, zone_id: zoneId, division_id: divisionId, picture_path:photoPath, application_path:applicationPath, deed_path:deedPath, nid_path:nidPath, trade_license_path:tradeLicensePath, salvage_certificate_path:salvageCertificatePath, bank_statement_path:bankStatementPath, agreement_path:agreementPath, cheque_path:chequePath },
+        { business_name: businessName, proprietor_name:proprietorName, permanent_address: permanentAddress, present_address: presentAddress, phone: phoneNumber, business_type: businessType, territory_id: territoryId, zone_id: zoneId, division_id: divisionId, picture_path:photoPath, application_path:applicationPath, deed_path:deedPath, nid_path:nidPath, trade_license_path:tradeLicensePath, salvage_certificate_path:salvageCertificatePath, bank_statement_path:bankStatementPath, agreement_path:agreementPath, cheque_path:chequePath },
       ])
     if (error) {
       console.log(error)
@@ -272,7 +272,7 @@ const CreateDistributor = () => {
                       </FormGroup>
                       <FormGroup>
                         <label htmlFor="feInputAddress">Parmanent Address</label>
-                        <FormInput id="feInputAddress" placeholder="Enter dealer's parmanent address" value={parmanentAddress} onChange={(e) => { setParmanentAddress(e.target.value) }} />
+                        <FormInput id="feInputAddress" placeholder="Enter dealer's parmanent address" value={permanentAddress} onChange={(e) => { setPermanentAddress(e.target.value) }} />
                       </FormGroup>
                       <Row form>
                         <Col md="8" className="form-group">

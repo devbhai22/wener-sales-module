@@ -97,6 +97,7 @@ const CreateInvoice = () => {
         const invoiceData = {
           initial_credit: initialCredit,
           create_date: new Date().toLocaleString("en-UK"),
+          create_day: new Date().toLocaleString("en-UK").split(",")[0],
           invoice_id: "p" + new Date().getTime(),
           payment_method: invoiceInfo.payment_method,
           transport_name: invoiceInfo.transport_name,

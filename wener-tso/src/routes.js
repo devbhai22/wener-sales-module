@@ -18,6 +18,7 @@ import OrderDetails from "./views/OrderDetails";
 import ReturnRequest from "./views/ReturnRequest";
 import EditDistributor from "./views/EditDistributor";
 import EditInvoice from "./views/EditInvoice";
+import DailyOrders from "./views/DailyOrders";
 
 
 export default [
@@ -101,6 +102,12 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: EditDistributor
+  },
+  {
+    path: "/daily-orders",
+    layout: DefaultLayout,
+    exact: true,
+    component: DailyOrders
   },
   {
     path: "/dashboard",

@@ -80,8 +80,12 @@ const Distributors = () => {
       accessor: "business_type"
     },
     {
-      Header: "Address",
-      accessor: "address"
+      Header: "Permanent Address",
+      accessor: "permanent_address"
+    },
+    {
+      Header: "Present Address",
+      accessor: "present_address"
     },
     {
       Header: "Phone Number",

@@ -116,8 +116,8 @@ const DistributorDetailsCard = ({ id }) => {
           {distributor.present_address}
         </span>
         <span className="text-muted d-block mb-2">
-          <span style={{ color: "#525252" }}>Parmanent Address : </span>
-          {distributor.parmanent_address}
+          <span style={{ color: "#525252" }}>Permanent Address : </span>
+          {distributor.permanent_address}
         </span>
         <span className="text-muted d-block mb-2">
           <span style={{ color: "#525252" }}>Phone Number : </span>
