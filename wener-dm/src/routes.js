@@ -19,6 +19,7 @@ import ReturnRequest from "./views/ReturnRequest";
 import EditInvoice from "./views/EditInvoice";
 import EditDistributor from "./views/EditDistributor";
 import PendingOrders from "./views/PendingOrders"
+import DailyOrders from "./views/DailyOrders";
 
 export default [
   {
@@ -95,6 +96,12 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: UserProfileLite
+  },
+  {
+    path: "/daily-orders",
+    exact: true,
+    layout: DefaultLayout,
+    component: DailyOrders
   },
   {
     path: "/login",
