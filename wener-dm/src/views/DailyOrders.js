@@ -5,6 +5,7 @@ import PageTitle from "../components/common/PageTitle";
 import supabase from "../utils/supabase";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import ExportToExcel from "../components/Table/ExportToExcel";
 
 const DailyOrders = () => {
   const [posts, setPosts] = useState([]);
@@ -28,7 +29,10 @@ const DailyOrders = () => {
       let { data: orders, error } = await supabase
         .from("orders")
         .select("*")
-        .eq("invoice_data->>create_day", new Date().toLocaleString("en-UK").split(",")[0])
+        .eq(
+          "invoice_data->>create_day",
+          new Date().toLocaleString("en-UK").split(",")[0]
+        )
         .eq("division_id", profile[0].works_at);
       if (error) {
         console.log(error);
@@ -170,7 +174,7 @@ const DailyOrders = () => {
             return (
               <div>
                 {makeTable()}
-                {/* <ExportToExcel posts={reactTable} /> */}
+                <ExportToExcel posts={reactTable} />
               </div>
             );
           }}
