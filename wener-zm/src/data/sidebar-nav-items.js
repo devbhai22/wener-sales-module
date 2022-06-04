@@ -32,11 +32,11 @@ export default function() {
       htmlBefore: '<i class="material-icons">table_chart</i>',
       to: "/pending-orders"
     },
-    // {
-    //   title: "Daily Orders",
-    //   htmlBefore: '<i class="material-icons">table_chart</i>',
-    //   to: "/daily-orders",
-    // },
+    {
+      title: "Daily Orders",
+      htmlBefore: '<i class="material-icons">table_chart</i>',
+      to: "/daily-orders"
+    },
     {
       title: "Orders",
       htmlBefore: '<i class="material-icons">table_chart</i>',
