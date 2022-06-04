@@ -8,19 +8,18 @@ import { DefaultLayout } from "./layouts";
 import BlogOverview from "./views/BlogOverview";
 import UserProfileLite from "./views/UserProfileLite";
 import CreateDistributor from "./views/CreateDistributor";
-import Distributors from "./views/Distributors"
+import Distributors from "./views/Distributors";
 import CreateInvoice from "./views/CreateInvoice";
 import Login from "./views/Login";
 import Logout from "./views/Logout";
 import Orders from "./views/Orders";
 import DistributorDetails from "./views/DistributorDetails";
 import OrderDetails from "./views/OrderDetails";
-import ReturnRequest from "./views/ReturnRequest"
-import PendingOrders from "./views/PendingOrders"
-import EditInvoice from "./views/EditInvoice"
-import EditDistributor from "./views/EditDistributor"
-import DailyOrders from "./views/DailyOrders";
-
+import ReturnRequest from "./views/ReturnRequest";
+import PendingOrders from "./views/PendingOrders";
+import EditInvoice from "./views/EditInvoice";
+import EditDistributor from "./views/EditDistributor";
+// import DailyOrders from "./views/DailyOrders";
 
 export default [
   {
@@ -98,12 +97,12 @@ export default [
     exact: true,
     component: UserProfileLite
   },
-  {
-    path: "/daily-orders",
-    layout: DefaultLayout,
-    exact: true,
-    component: DailyOrders
-  },
+  // {
+  //   path: "/daily-orders",
+  //   layout: DefaultLayout,
+  //   exact: true,
+  //   component: DailyOrders
+  // },
   {
     path: "/login",
     layout: DefaultLayout,
