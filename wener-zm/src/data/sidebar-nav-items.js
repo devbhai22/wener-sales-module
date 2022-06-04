@@ -1,4 +1,4 @@
-export default function () {
+export default function() {
   return [
     {
       title: "Dashboard",
@@ -15,7 +15,7 @@ export default function () {
     {
       title: "Dealers",
       htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/distributors",
+      to: "/distributors"
     },
     // {
     //   title: "Tables",
@@ -25,27 +25,27 @@ export default function () {
     {
       title: "Create Invoice",
       htmlBefore: '<i class="material-icons">edit</i>',
-      to: "/create-invoice",
+      to: "/create-invoice"
     },
     {
       title: "Pending Orders",
       htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/pending-orders",
+      to: "/pending-orders"
     },
-    {
-      title: "Daily Orders",
-      htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/daily-orders",
-    },
+    // {
+    //   title: "Daily Orders",
+    //   htmlBefore: '<i class="material-icons">table_chart</i>',
+    //   to: "/daily-orders",
+    // },
     {
       title: "Orders",
       htmlBefore: '<i class="material-icons">table_chart</i>',
-      to: "/orders",
+      to: "/orders"
     },
     {
       title: "Logout",
       htmlBefore: '<i class="material-icons">logout</i>',
-      to: "/logout",
-    },
+      to: "/logout"
+    }
   ];
 }
