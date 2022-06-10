@@ -43,6 +43,11 @@ export default function () {
       to: "/orders",
     },
     {
+      title: "Notifications",
+      htmlBefore: '<i class="material-icons">notifications</i>',
+      to: "/notifications",
+    },
+    {
       title: "Logout",
       htmlBefore: '<i class="material-icons">logout</i>',
       to: "/logout",

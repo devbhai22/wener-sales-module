@@ -7,8 +7,10 @@ import Loading from "../components/Loading/Loading";
 const DistributorDetailsCard = ({ id }) => {
   const [distributor, setDistributor] = useState({});
   const [loading, setLoading] = useState(true);
-
+  
   const history = useHistory();
+  const user = supabase.auth.user();
+  console.log(user);
 
   useEffect(() => {
     async function fetchData() {
@@ -26,6 +28,21 @@ const DistributorDetailsCard = ({ id }) => {
     }
     fetchData();
   }, []);
+
+  async function requestEdit() {
+    const { data, error2 } = await supabase.from("notifications").insert([
+      {
+        message:
+          "Edit access of " +
+          distributor.business_name +
+          " requested by " +
+          user.email,
+        source_id: user.id,
+        concern_of: distributor.division_id,
+        distributor_location: distributor.id
+      }
+    ]);
+  }
 
   if (loading) {
     return <Loading></Loading>;
@@ -233,7 +250,7 @@ const DistributorDetailsCard = ({ id }) => {
         )}
 
         <ListGroupItem className="p-0" style={{ border: "none" }}>
-          {distributor.edit_access == 'true' ? (
+        {distributor.edit_access == "true" ? (
             <button
               className="btn btn-info d-block m-4 mx-auto"
               type="button"
@@ -243,7 +260,18 @@ const DistributorDetailsCard = ({ id }) => {
             >
               Edit Dealer
             </button>
-          ) : null}
+          ) : (
+            <button
+              className="btn btn-primary d-block m-4 mx-auto"
+              type="button"
+              onClick={e => {
+                e.preventDefault();
+                requestEdit();
+              }}
+            >
+              Request Edit Access
+            </button>
+          )}
         </ListGroupItem>
       </CardHeader>
     </Card>

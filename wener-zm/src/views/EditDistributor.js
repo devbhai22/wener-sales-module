@@ -17,6 +17,7 @@ import {
 import PageTitle from "../components/common/PageTitle";
 import supabase from "../utils/supabase";
 import Loading from "../components/Loading/Loading";
+import useLocalStorage from "./useLocalStorage";
 
 
 const EditDistributor = ({ match }) => {
@@ -26,35 +27,35 @@ const EditDistributor = ({ match }) => {
     //   const [zoneId, setZoneId] = useState('');
     //   const [divisionId, setDivisionId] = useState('');
 
-    const [businessName, setBusinessName] = useState('');
-    const [proprietorName, setProprietorName] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [businessType, setBusinessType] = useState('A')
-    const [creditLimit, setCreditLimit] = useState(0)
-    const [permanentAddress, setPermanentAddress] = useState('')
-    const [presentAddress, setPresentAddress] = useState('')
+    const [businessName, setBusinessName] = useLocalStorage("businessName", "");
+    const [proprietorName, setProprietorName] = useLocalStorage("proprietorName", "");
+    const [phoneNumber, setPhoneNumber] = useLocalStorage("phoneNumber", "");
+    const [businessType, setBusinessType] = useLocalStorage("businessType", 'A');
+    const [creditLimit, setCreditLimit] = useLocalStorage("creditLimit", 0);
+    const [permanentAddress, setPermanentAddress] = useLocalStorage("permanentAddress", "");
+    const [presentAddress, setPresentAddress] = useLocalStorage("presentAddress", "");
 
     //documents
-    const [photoPath, setPhotoPath] = useState(null)
-    const [photoName, setPhotoName] = useState('')
-    const [applicationPath, setApplicationPath] = useState(null)
-    const [applicationName, setApplicationName] = useState('')
-    const [deedPath, setDeedPath] = useState(null)
-    const [deedName, setDeedName] = useState('')
-    const [tinPath, setTinPath] = useState(null)
-    const [tinName, setTinName] = useState('')
-    const [nidPath, setNidPath] = useState(null)
-    const [nidName, setNidName] = useState('')
-    const [tradeLicensePath, setTradeLicensePath] = useState(null)
-    const [tradeLicenseName, setTradeLicenseName] = useState('')
-    const [salvageCertificatePath, setSalvageCertificatePath] = useState(null)
-    const [salvageCertificateName, setSalvageCertificateName] = useState('')
-    const [bankStatementPath, setBankStatementPath] = useState(null)
-    const [bankStatementName, setBankStatementName] = useState('')
-    const [agreementPath, setAgreementPath] = useState(null)
-    const [agreementName, setAgreementName] = useState('')
-    const [chequePath, setChequePath] = useState(null)
-    const [chequeName, setChequeName] = useState('')
+    const [photoPath, setPhotoPath] = useLocalStorage("photoPath", null)
+    const [photoName, setPhotoName] = useLocalStorage("photoName", '')
+    const [applicationPath, setApplicationPath] = useLocalStorage("applicationPath", null)
+    const [applicationName, setApplicationName] = useLocalStorage("applicationName", '')
+    const [deedPath, setDeedPath] = useLocalStorage("deedPath", null)
+    const [deedName, setDeedName] = useLocalStorage("deedName", '')
+    const [tinPath, setTinPath] = useLocalStorage("tinPath", null)
+    const [tinName, setTinName] = useLocalStorage("tinName", '')
+    const [nidPath, setNidPath] = useLocalStorage("nidPath", null)
+    const [nidName, setNidName] = useLocalStorage("nidName", '')
+    const [tradeLicensePath, setTradeLicensePath] = useLocalStorage("tradeLicensePath", null)
+    const [tradeLicenseName, setTradeLicenseName] = useLocalStorage("tradeLicenseName", '')
+    const [salvageCertificatePath, setSalvageCertificatePath] = useLocalStorage("salvageCertificatePath", null)
+    const [salvageCertificateName, setSalvageCertificateName] = useLocalStorage("salvageCertificateName", '')
+    const [bankStatementPath, setBankStatementPath] = useLocalStorage("bankStatementPath", null)
+    const [bankStatementName, setBankStatementName] = useLocalStorage("bankStatementName", '')
+    const [agreementPath, setAgreementPath] = useLocalStorage("agreementPath", null)
+    const [agreementName, setAgreementName] = useLocalStorage("agreementName", '')
+    const [chequePath, setChequePath] = useLocalStorage("chequePath", null)
+    const [chequeName, setChequeName] = useLocalStorage("chequeName", '')
     const [loading, setLoading] = useState(true)
 
     const history = useHistory()

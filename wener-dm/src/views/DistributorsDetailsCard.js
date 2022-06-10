@@ -19,6 +19,13 @@ const DistributorDetailsCard = ({ id }) => {
 
   const history = useHistory();
 
+  async function cancelEditRequest(){
+    const { data, error } = await supabase
+    .from('notifications')
+    .delete()
+    .match({ distributor_location: distributor.id })
+  }
+
   useEffect(() => {
     async function fetchData() {
       let { data: distributors, error } = await supabase
@@ -52,6 +59,7 @@ const DistributorDetailsCard = ({ id }) => {
       console.log(editAccess);
     }
     setEditAccess('true');
+    cancelEditRequest()
   }
 
   //Restrain

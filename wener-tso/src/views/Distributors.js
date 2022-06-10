@@ -49,15 +49,6 @@ const Distributors = () => {
 
   }, []);
 
-
-
-  function deletePoste(id) {
-    const pts = posts.filter(post => {
-      return post.id !== id
-    });
-    setPosts(pts)
-  }
-
   const columns = [
     {
       Header: "ID",

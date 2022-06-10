@@ -20,6 +20,7 @@ import EditInvoice from "./views/EditInvoice";
 import EditDistributor from "./views/EditDistributor";
 import PendingOrders from "./views/PendingOrders"
 import DailyOrders from "./views/DailyOrders";
+import Notifications from "./views/Notifications";
 
 export default [
   {
@@ -102,6 +103,12 @@ export default [
     exact: true,
     layout: DefaultLayout,
     component: DailyOrders
+  },
+  {
+    path: "/notifications",
+    exact: true,
+    layout: DefaultLayout,
+    component: Notifications
   },
   {
     path: "/login",
