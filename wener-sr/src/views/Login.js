@@ -29,7 +29,7 @@ const Login = () => {
       let profile = await supabase.from('profiles').select('*').eq('id', user.id)
       console.log(profile);
 
-      if (profile.data.length > 0 && profile.body[0].role === 'tso') {
+      if (profile.data.length > 0 && profile.body[0].role === 'sr') {
         localStorage.setItem("name", profile.body[0].name)
         localStorage.setItem("avatar_url", profile.body[0].profile_picture_path)
         // localStorage.setItem('email', email+'@mail.com')
@@ -37,7 +37,7 @@ const Login = () => {
         history.push('/dashboard')
       } else {
         supabase.auth.signOut().then((data) => {
-          setErrorMessage("This dashboard is for TSO users only")
+          setErrorMessage("This dashboard is for SR users only")
           console.log(data);
         })
       }
