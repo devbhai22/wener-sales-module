@@ -33,7 +33,10 @@ const DailyOrders = () => {
           "invoice_data->>create_day",
           new Date().toLocaleString("en-UK").split(",")[0]
         )
-        .eq("division_id", profile[0].works_at);
+        .eq("division_id", profile[0].works_at)
+        .not('status', 'eq', 'Created By TSO')
+        .not('status', 'eq', 'Rejected By ZSM')
+        .not('status', 'eq', 'Rejected By DM');
       if (error) {
         console.log(error);
       } else {

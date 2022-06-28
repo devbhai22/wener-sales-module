@@ -29,7 +29,9 @@ const DailyOrders = () => {
         .from("orders")
         .select("*")
         .eq("invoice_data->>create_day", new Date().toLocaleString("en-UK").split(",")[0])
-        .eq("territory_id", profile[0].works_at);
+        .eq("territory_id", profile[0].works_at)
+        .not('status', 'eq', 'Rejected By ZSM')
+        .not('status', 'eq', 'Rejected By DM');
       if (error) {
         console.log(error);
       } else {
