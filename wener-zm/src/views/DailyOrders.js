@@ -93,6 +93,11 @@ const DailyOrders = () => {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
           );
+        }
+        else if (props.original.status == "Created By SR") {
+          return (
+            <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
+          );
         } else if (props.original.status == "Approved By ZSM") {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
