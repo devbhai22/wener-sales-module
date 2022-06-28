@@ -35,6 +35,7 @@ const DailyOrders = () => {
         )
         .eq("division_id", profile[0].works_at)
         .not('status', 'eq', 'Created By TSO')
+        .not('status', 'eq', 'Created By SR')
         .not('status', 'eq', 'Rejected By ZSM')
         .not('status', 'eq', 'Rejected By DM');
       if (error) {
