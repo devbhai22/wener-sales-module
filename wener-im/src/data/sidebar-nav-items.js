@@ -38,6 +38,11 @@ export default function () {
       to: "/returned-orders",
     },
     {
+      title: "Stock",
+      htmlBefore: '<i class="material-icons">table_chart</i>',
+      to: "/stock",
+    },
+    {
       title: "Logout",
       htmlBefore: '<i class="material-icons">logout</i>',
       to: "/logout",
