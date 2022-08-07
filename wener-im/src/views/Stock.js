@@ -49,10 +49,10 @@ const Stock = () => {
     setPosts(prevPosts=>{
       let filteredPosts = ogPosts
       if(filters.name1){
-        filteredPosts=filteredPosts.filter(({name1})=>name1.includes(filters.name1))
+        filteredPosts=filteredPosts.filter(({name1})=>name1.toLowerCase().includes(filters.name1.toLowerCase()))
       }
       if(filters.name2){
-        filteredPosts=filteredPosts.filter(({name2})=>name2.includes(filters.name2))
+        filteredPosts=filteredPosts.filter(({name2})=>name2.toLowerCase().includes(filters.name2.toLowerCase()))
       }
       if(filters.quantity){
         filteredPosts=filteredPosts.filter(({quantity})=>quantity==filters.quantity)
