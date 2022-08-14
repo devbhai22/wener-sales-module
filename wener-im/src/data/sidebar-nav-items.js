@@ -43,6 +43,11 @@ export default function () {
       to: "/stock",
     },
     {
+      title: "Add Stock",
+      htmlBefore: '<i class="material-icons">table_chart</i>',
+      to: "/addStock",
+    },
+    {
       title: "Logout",
       htmlBefore: '<i class="material-icons">logout</i>',
       to: "/logout",

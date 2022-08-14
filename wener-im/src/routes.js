@@ -19,6 +19,7 @@ import PendingOrders from "./views/PendingOrders"
 import ReturnedOrders from "./views/ReturnedOrders"
 import EditOrder from "./views/EditOrder"
 import Stock from "./views/Stock"
+import AddStock from "./views/AddStock";
 export default [
   {
     path: "/",
@@ -112,5 +113,11 @@ export default [
     exact: true,
     layout: DefaultLayout,
     component: Stock
-  }
+  },
+  {
+    path: "/addStock",
+    exact: true,
+    layout: DefaultLayout,
+    component: AddStock
+  },
 ];
