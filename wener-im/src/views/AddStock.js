@@ -1,20 +1,20 @@
 import { Grid, Stack, TextField,Button, IconButton, Divider } from '@mui/material';
 import React,{ useState, useLayoutEffect } from 'react';
 import { Container, Row } from "shards-react"
+import { useHistory } from "react-router-dom"
 import PageTitle from "../components/common/PageTitle"
 import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';const AddStock = () => {
+import RemoveIcon from '@mui/icons-material/Remove';import supabase from '../utils/supabase';
+const AddStock = () => {
 	const [items, setItems] = useState([
 		{
-      id:"",
       name1:"",
       name2:"",
-      quantity:"",
-      sellingPrice:"",
-      cost:"",
-      type:"",
-      onDelivery:"",
-      image:""
+      quantity:NaN,
+      selling_price:NaN,
+      cost:NaN,
+      product_type:"",
+      delivery_status:"",
     }])
 
 	const handleChange = (e,index)=>{
@@ -31,15 +31,13 @@ import RemoveIcon from '@mui/icons-material/Remove';const AddStock = () => {
 	const addRow = ()=>{
 		setItems([...items,
 			{
-			id:"",
 			name1:"",
 			name2:"",
-			quantity:"",
-			sellingPrice:"",
-			cost:"",
-			type:"",
-			onDelivery:"",
-			image:""
+			quantity:NaN,
+			selling_price:NaN,
+			cost:NaN,
+			product_type:"",
+			delivery_status:"",
 			}
 		])
 	}
@@ -47,6 +45,25 @@ import RemoveIcon from '@mui/icons-material/Remove';const AddStock = () => {
 		setItems(items.filter((item,index) => i !== index))
 	}
 
+	const addToStock = async (array) => {
+		console.log(array)
+		const { data, error } = await supabase
+		.from('stock_summary')
+		.insert(array)
+		if(error){
+			console.log(error)
+		}else{
+			setItems([{
+				name1:"",
+				name2:"",
+				quantity:NaN,
+				selling_price:NaN,
+				cost:NaN,
+				product_type:"",
+				delivery_status:"",
+			}])
+		}
+	}
 
   return (
     <Container fluid className="main-content-container px-4">
@@ -68,19 +85,19 @@ import RemoveIcon from '@mui/icons-material/Remove';const AddStock = () => {
 				<TextField label="Name 2" name="name2" value={data.name2} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={2} md={1}>
-				<TextField label="Quantity" name="quantity" value={data.quantity} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<TextField label="Quantity" type="number" name="quantity" value={data.quantity} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={3} md={1.5}>
-				<TextField label="Selling Price" name="sellingPrice" value={data.sellingPrice} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<TextField label="Selling Price" type="number" name="selling_price" value={data.selling_price} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={2} md={1}>
-				<TextField label="Cost" name="cost" value={data.cost} fullWidth size="small"  onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<TextField label="Cost" name="cost" type="number" value={data.cost} fullWidth size="small"  onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={2.5} md={1.5}>
-				<TextField label="Type" name="type" value={data.type} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<TextField label="product_type" name="product_type" value={data.product_type} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={2.5} md={1.5}>
-				<TextField label="On Delivery" name="onDelivery" defaultValue={data.onDelivery} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<TextField label="On Delivery" name="delivery_status" defaultValue={data.delivery_status} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item >
 				<Stack direction="row">
@@ -102,7 +119,7 @@ import RemoveIcon from '@mui/icons-material/Remove';const AddStock = () => {
 	 	 </div>
 			)}
 	  	<Divider sx={{margin:"10px 0"}}/>
-	  	<Button variant="contained" size="large">Add to Stock</Button>
+	  	<Button variant="contained" size="large" onClick={()=>addToStock(items)}>Add to Stock</Button>
     </Container>
   )
 }
