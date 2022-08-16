@@ -12,7 +12,7 @@ import Distributors from "./views/Distributors"
 import CreateInvoice from "./views/CreateInvoice";
 import Login from "./views/Login";
 import Logout from "./views/Logout";
-import Orders from "./views/Orders";
+
 import DistributorDetails from "./views/DistributorDetails";
 import OrderDetails from "./views/OrderDetails";
 import PendingOrders from "./views/PendingOrders"
@@ -20,6 +20,7 @@ import ReturnedOrders from "./views/ReturnedOrders"
 import EditOrder from "./views/EditOrder"
 import Stock from "./views/Stock"
 import AddStock from "./views/AddStock";
+import Orders from "./views/Orders";
 export default [
   {
     path: "/",
