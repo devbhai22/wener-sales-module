@@ -9,6 +9,9 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
+import { Divider, FormControlLabel, Grid, Stack, Switch, TextField } from '@mui/material';
+import { useState } from 'react';
+import supabase from '../../utils/supabase';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -20,7 +23,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const BootstrapDialogTitle = (props) => {
-  const { children, onClose, data, ...other } = props;
+  const { children, onClose, ...other } = props;
 
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
@@ -48,8 +51,10 @@ BootstrapDialogTitle.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default function EditProductModal() {
-  const [open, setOpen] = React.useState(false);
+export default function EditProductModal(props) {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState(props.data)
+  const [needsPermission, setNeedsPermission]=useState(false)
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -58,6 +63,21 @@ export default function EditProductModal() {
     setOpen(false);
   };
 
+  const handleChange = (e)=>{
+    setData({...data,[e.target.name]:e.target.value})
+  }
+  const editStockRow = async (obj) => {
+    const { row, error } = await supabase
+    .from('stock_summary')
+    .update(obj)
+    .eq('id', obj.id)
+		if(error){
+			console.log(error)
+		}else{
+      props.setToggleUpdate((prevState)=>!prevState)
+      handleClose()
+		}
+	}
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>Edit</Button>
@@ -69,24 +89,45 @@ export default function EditProductModal() {
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
           Edit Stock Item
         </BootstrapDialogTitle>
+
         <DialogContent dividers>
-          <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-            consectetur ac, vestibulum at eros.
-          </Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus
-            magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec
-            ullamcorper nulla non metus auctor fringilla.
-          </Typography>
+          
+          <div  style={{ borderBottom:"1px solid lightgray", marginBottom:"20px"}}>
+          <Switch color="primary" value={needsPermission} onChange={(e)=>setNeedsPermission(e.target.checked)}/>
+          <span style={{fontSize:"14px", color:"gray", transform:"translateX(-8px)"}}>Request DM's authorization for changing <i>cost</i> and <i>selling price</i></span>
+          </div>
+        
+          <Grid container spacing={1.5} justifyContent="start">
+   
+          <Grid item xs={12} sm={4}>
+            <TextField label="id" name="id" value={data.id} disabled fullWidth size="small"/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="Name 1" name="name1" value={data.name1} fullWidth size="small" onChange={handleChange}/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="Name 2" name="name2" value={data.name2} fullWidth size="small" onChange={handleChange}/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="Quantity" type="number" name="quantity" value={data.quantity} fullWidth size="small" onChange={handleChange}/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="Selling Price" type="number" name="selling_price" value={data.sellingPrice} fullWidth size="small" disabled={!needsPermission} onChange={handleChange}/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="Cost" name="cost" type="number" value={data.cost} fullWidth size="small" disabled={!needsPermission} onChange={handleChange}/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="Type" name="product_type" value={data.type} fullWidth size="small" onChange={handleChange}/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField label="On Delivery" name="delivery_status" value={data.onDelivery} fullWidth size="small" onChange={handleChange}/>
+          </Grid>
+          
+          </Grid>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose}>
+          <Button autoFocus onClick={()=>editStockRow(data)}>
             Save changes
           </Button>
         </DialogActions>

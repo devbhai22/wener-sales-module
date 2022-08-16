@@ -4,50 +4,46 @@ import { Container, Row } from "shards-react";
 import ReactTable from 'react-table';
 import { TextField, MenuItem } from '@mui/material'
 import EditProductModal from '../components/editProductModal/EditProductModal';
+import supabase from '../utils/supabase';
 
 const Stock = () => {
   
-  const [ogPosts, setOgPosts] = useState([
-    {
-      id:"1",
-      name1:"abrar",
-      name2:"gabrar",
-      quantity:5,
-      sellingPrice:10,
-      cost:2,
-      type:"human",
-      onDelivery:"IDK",
-      image:"https://images.pexels.com/photos/1933873/pexels-photo-1933873.jpeg?auto=compress&cs=tinysrgb&w=600"
-    },
-    {
-      id:"2",
-      name1:"pocket",
-      name2:"knife",
-      quantity:5,
-      sellingPrice:10,
-      cost:2,
-      type:"tool",
-      onDelivery:"IDK",
-      image:"https://images.pexels.com/photos/168804/pexels-photo-168804.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+  const [ogStocks, setOgStocks] = useState([])
+  const [stocks,setStocks] = useState(ogStocks)
+  const [toggleUpdate, setToggleUpdate]=useState(false)
+    useEffect(() => {
+    async function fetchData() {
+      let { data: stock_summary, error } = await supabase
+      .from('stock_summary')
+      .select('*')
+      if (error) {
+        console.log(error)
+      }
+      else {
+        setOgStocks(stock_summary)
+        setStocks(stock_summary)
+        console.log(stock_summary)
+      }
     }
-
-  ])
-  const [posts,setPosts] = useState(ogPosts)
+    fetchData()
+  }, [toggleUpdate]);
+  
   const [filters, setFilters] = useState({
-    id:"",
+    id:NaN,
     name1:"",
     name2:"",
     quantity:"",
-    sellingPrice:"",
+    selling_price:"",
     cost:"",
-    type:"",
-    onDelivery:"",
+    product_type:"",
+    delivery_status:"",
   })
+  
   const [focus, setFocus] = useState(null)
   useEffect(() => {
 
-    setPosts(prevPosts=>{
-      let filteredPosts = ogPosts
+    setStocks(prevPosts=>{
+      let filteredPosts = ogStocks
       if(filters.name1){
         filteredPosts=filteredPosts.filter(({name1})=>name1.toLowerCase().includes(filters.name1.toLowerCase()))
       }
@@ -57,31 +53,23 @@ const Stock = () => {
       if(filters.quantity){
         filteredPosts=filteredPosts.filter(({quantity})=>quantity==filters.quantity)
       }
-      if(filters.sellingPrice){
-        filteredPosts=filteredPosts.filter(({sellingPrice})=>sellingPrice==filters.sellingPrice)
+      if(filters.selling_price){
+        filteredPosts=filteredPosts.filter(({selling_price})=>selling_price==filters.selling_price)
       }
       if(filters.cost){
         filteredPosts=filteredPosts.filter(({cost})=>cost==filters.cost)
       }
-      if(filters.type){
-        filteredPosts=filteredPosts.filter(({type})=>type==filters.type)
+      if(filters.product_type){
+        filteredPosts=filteredPosts.filter(({product_type})=>product_type==filters.product_type)
       }
-      if(filters.onDelivery){
-        filteredPosts=filteredPosts.filter(({onDelivery})=>onDelivery==filters.onDelivery)
+      if(filters.delivery_status){
+        filteredPosts=filteredPosts.filter(({delivery_status})=>delivery_status==filters.delivery_status)
       }
 
       return filteredPosts
     })
   }, [filters])
   
-  const idRef = useRef(null)
-  const name1Ref = useRef(null)
-  const name2Ref = useRef(null)
-  const quantityRef = useRef(null)
-  const sellingPriceRef = useRef(null)
-  const costRef = useRef(null)
-  const typeRef = useRef(null)
-  const onDeliveryRef = useRef(null)
 
 
   const handleChange = (e)=>{
@@ -95,11 +83,12 @@ const Stock = () => {
     textAlign:"center",
     display:"flex",
     alignItems:"center",
-    justifyContent:"center"
+    justifyContent:"center",
+    width: "20px",
   }
   const columns = [
     {
-      Header: ()=><TextField size='small' label="Product Id" name="id" sx={{marginTop:"5px"}} autoFocus={(focus=="id")} onChange={handleChange} value={filters.id}/>,
+      Header: ()=><TextField size='small' type="number" label="Id" name="id" sx={{marginTop:"5px"}} autoFocus={(focus=="id")} onChange={handleChange} value={filters.id}/>,
       accessor:"id",
       style
     },
@@ -119,8 +108,8 @@ const Stock = () => {
       style,
     },
     {
-      Header: ()=><TextField size='small' label="Selling Price" name="sellingPrice" sx={{marginTop:"5px"}} autoFocus={(focus=="sellingPrice")} onChange={handleChange} value={filters.sellingPrice}/>,
-      accessor:"sellingPrice",
+      Header: ()=><TextField size='small' label="Selling Price" name="selling_price" sx={{marginTop:"5px"}} autoFocus={(focus=="selling_price")} onChange={handleChange} value={filters.selling_price}/>,
+      accessor:"selling_price",
       style
     },
     {
@@ -130,32 +119,32 @@ const Stock = () => {
     },
     {
       Header: ()=>
-      <TextField select fullWidth size='small' label="Type" name="type" sx={{marginTop:"5px"}} autoFocus={(focus=="type")} onChange={handleChange} value={filters.type}>
-        {posts.map(post=>post.type).filter((v, i, a) => a.indexOf(v) === i).map(option=>(
+      <TextField select fullWidth size='small' label="type" name="product_type" sx={{marginTop:"5px"}} autoFocus={(focus=="product_type")} onChange={handleChange} value={filters.product_type}>
+        {stocks.map(post=>post.product_type).filter((v, i, a) => a.indexOf(v) === i).map(option=>(
           <MenuItem key={option} value={option}>
             {option}
           </MenuItem>
         ))}
       </TextField>,
-      accessor:"type",
+      accessor:"product_type",
       style
     },
     {
-      Header: ()=><TextField size='small' label="On Delivery" name="onDelivery" sx={{marginTop:"5px"}} autoFocus={(focus=="onDelivery")} onChange={handleChange} value={filters.onDelivery}/>,
-      accessor:"onDelivery",
+      Header: ()=><TextField size='small' label="On Delivery" name="delivery_status" sx={{marginTop:"5px"}} autoFocus={(focus=="delivery_status")} onChange={handleChange} value={filters.delivery_status}/>,
+      accessor:"delivery_status",
       style
     },
     {
       Header: ()=><TextField size='small' label="Image" sx={{marginTop:"5px"}} disabled/>,
       style,
       Cell: ({original}) =>  
-        <img style={{width:"auto", height:"40px", borderRadius:"5px"}} src={original.image} alt={original.name1} />
+        <img style={{width:"auto", height:"40px", borderRadius:"5px"}} src={original.image}  />
     },
     {
       Header: ()=><TextField size='small' label="Action" sx={{marginTop:"5px"}} disabled/>,
       style,
       Cell: ({original}) =>  
-      <EditProductModal data={original}/>
+      <EditProductModal data={original} setToggleUpdate={setToggleUpdate}/>
     },
   ] 
   const handleKeyPress = (e) => {
@@ -171,7 +160,7 @@ const Stock = () => {
       </Row>
       <ReactTable
         className="-striped -highlight"
-        data={posts}
+        data={stocks}
         sortable = {false}
         columns={columns}
         defaultPageSize={10}
