@@ -1,11 +1,14 @@
-import { Grid, Stack, TextField,Button, IconButton, Divider } from '@mui/material';
-import React,{ useState, useLayoutEffect } from 'react';
+import { Grid, Stack, TextField,Button, IconButton, Divider, Autocomplete } from '@mui/material';
+import React,{ useState, useEffect } from 'react';
 import { Container, Row } from "shards-react"
 import { useHistory } from "react-router-dom"
 import PageTitle from "../components/common/PageTitle"
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';import supabase from '../utils/supabase';
 const AddStock = () => {
+	const history = useHistory()
+	const [stocks, setStocks] = useState([])
+	const [options, setOptions] = useState({name1:[""], name2:[""],product_type:[""] })
 	const [items, setItems] = useState([
 		{
       name1:"",
@@ -16,9 +19,45 @@ const AddStock = () => {
       product_type:"",
       delivery_status:"",
     }])
+	useEffect(() => {
+		async function fetchData() {
+		let { data: stock_summary, error } = await supabase
+		.from('stock_summary')
+		.select('*')
+		if (error) {
+			console.log(error)
+		}
+		else {
+			setStocks(stock_summary)
+			console.log(stock_summary)
+		}
+		}
+		fetchData()
+	}, []);
 
+	useEffect(() => {
+		if(stocks.length){
+			setOptions({
+				name1:[...new Set(stocks.map((stock)=>stock.name1))],
+				name2:[...new Set(stocks.map((stock)=>stock.name2))],
+				product_type:[...new Set(stocks.map((stock)=>stock.product_type))]
+			})
+		}
+	}, [stocks])
+	
 	const handleChange = (e,index)=>{
 		const {name, value} = e.target
+		console.log(name,value)
+		let changedItems=items.map((item,i)=>{
+			if(index===i){
+				return {...item, [name]:value}
+			}
+			return item
+		})
+		setItems(changedItems)
+	}
+	const handleAutoCompChange = (name,value,index)=>{
+		console.log(name, value, index)
 		let changedItems=items.map((item,i)=>{
 			if(index===i){
 				return {...item, [name]:value}
@@ -41,7 +80,7 @@ const AddStock = () => {
 			}
 		])
 	}
-	const deleteRow = (i)=>{      
+	const deleteRow = (i)=>{     
 		setItems(items.filter((item,index) => i !== index))
 	}
 
@@ -53,15 +92,8 @@ const AddStock = () => {
 		if(error){
 			console.log(error)
 		}else{
-			setItems([{
-				name1:"",
-				name2:"",
-				quantity:NaN,
-				selling_price:NaN,
-				cost:NaN,
-				product_type:"",
-				delivery_status:"",
-			}])
+			//redirect to stock
+			history.push("/stock")
 		}
 	}
 
@@ -71,7 +103,7 @@ const AddStock = () => {
 			<PageTitle md="12" title="View Stocks" subtitle="Stocks" className="text-md-left" />
 		</Row>
 				
-		{items.map((data,i)=>
+		{stocks && items.map((data,i)=>
 		<div className='item-rows' >
 		<Grid container spacing={1.5} justifyContent="start" >
    
@@ -79,10 +111,21 @@ const AddStock = () => {
 				<TextField label="id" name="id" value={data.id} disabled fullWidth size="small" sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={3} md={1.5}>
-				<TextField label="Name 1" name="name1" value={data.name1} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<Autocomplete
+					freeSolo
+					onChange={(e,value)=>handleAutoCompChange("name1",value,i)}
+					options={options.name1.map((option) => option)}
+					renderInput={(params) => <TextField {...params} label="Name 1" name="name1" onChange={(e)=>handleChange(e,i)} value={data.name1} fullWidth size="small" sx={{background:"white"}}/>}
+				/>
 			</Grid>
 			<Grid item xs={12} sm={3} md={1.5}>
-				<TextField label="Name 2" name="name2" value={data.name2} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<Autocomplete
+					freeSolo
+					onChange={(e,value)=>handleAutoCompChange("name2",value,i)}
+					options={options.name2.map((option) => option)}
+					renderInput={(params) => <TextField {...params} label="Name 2" name="name2" onChange={(e)=>handleChange(e,i)} value={data.name2} fullWidth size="small" sx={{background:"white"}}/>}
+				/>
+				
 			</Grid>
 			<Grid item xs={12} sm={2} md={1}>
 				<TextField label="Quantity" type="number" name="quantity" value={data.quantity} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
@@ -94,7 +137,12 @@ const AddStock = () => {
 				<TextField label="Cost" name="cost" type="number" value={data.cost} fullWidth size="small"  onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={2.5} md={1.5}>
-				<TextField label="product_type" name="product_type" value={data.product_type} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+				<Autocomplete
+					freeSolo
+					onChange={(e,value)=>handleAutoCompChange("product_type",value,i)}
+					options={options.product_type.map((option) => option)}
+					renderInput={(params) => <TextField {...params} label="product_type" name="product_type" onChange={(e)=>handleChange(e,i)} value={data.product_type} fullWidth size="small" sx={{background:"white"}}/>}
+				/>
 			</Grid>
 			<Grid item xs={12} sm={2.5} md={1.5}>
 				<TextField label="On Delivery" name="delivery_status" defaultValue={data.delivery_status} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
