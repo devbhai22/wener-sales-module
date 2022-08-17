@@ -95,7 +95,7 @@ const FilterFields = ({setPosts, ogPosts}) => {
     <div>
         <TextField variant='standard' name="id" sx={{marginTop:"5px",width:"100px"}} autoFocus={(focus=="id")} onChange={handleChange} value={filters.id}/>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <div style={{display:"inline-flex",justifyContent:"space-around", width:'180px'}}>
+          <div style={{display:"inline-flex",justifyContent:"space-around", width:'150px'}}>
             <div style={{maxWidth:44, overflow:"hidden", display:"inline-block", padding:"0px", borderRadius:"50%"}}>
               <DesktopDatePicker
                 inputFormat='dd/MM/yy'
@@ -120,14 +120,14 @@ const FilterFields = ({setPosts, ogPosts}) => {
         <TextField variant='standard' name="distributor_name" sx={{marginTop:"5px",width:"200px"}} autoFocus={(focus=="distributor_name")} onChange={handleChange} value={filters.distributor_name}/>
         <TextField variant='standard' name="minAmount" sx={{marginTop:"5px",width:"75px"}} autoFocus={(focus=="minAmount")} onChange={handleChange} value={filters.minAmount}/>
         <TextField variant='standard' name="maxAmount" sx={{marginTop:"5px",width:"75px"}} autoFocus={(focus=="maxAmount")} onChange={handleChange} value={filters.maxAmount}/>
-        <TextField select variant='standard' name="status" sx={{marginTop:"5px", width:"180px"}} autoFocus={(focus=="status")} onChange={handleChange} value={filters.type}>
+        <TextField select variant='standard' name="status" sx={{marginTop:"5px", width:"180px"}} autoFocus={(focus=="status")} onChange={handleChange} value={filters.status}>
         {["Created By DM","Approved By DM","Rejected By IM","Order Dispatched"].map(option=>(
           <MenuItem key={option} value={option}>
             {option}
           </MenuItem>
         ))}
       </TextField>
-       <IconButton sx={{ padding:"0", transform:"translate(120px,9.5px)"}} aria-label="delete">
+       <IconButton onClick={reset} sx={{ padding:"0", transform:"translate(120px,9.5px)"}} aria-label="delete">
         <RefreshIcon />
       </IconButton>
 

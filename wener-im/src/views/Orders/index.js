@@ -56,25 +56,28 @@ const Orders = () => {
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 100 },
-  {
-    field: 'create_date',
+  { 
     headerName: 'Date',
-    width: 180,
+    field:'create_date',
+    valueGetter: ({row})=>row.create_date.split(",")[0],
+    width: 150,
+    sortable: false,
   },
   {
-    field: 'distributor_name',
     headerName: 'Dealer Name',
+    field: 'distributor_name',
     width: 200,
   },
   {
-    field: 'net_total',
     headerName: 'Total Amount',
+    field: 'net_total',
     type: 'number',
     width: 150,
+    aggregation: true
   },
   {
-    field: 'status',
     headerName: 'Status',
+    field: 'status',
     width: 180,
     renderCell: ({value}) => <span style={{color:statusColor(value)}}>{value}</span>,
   },
