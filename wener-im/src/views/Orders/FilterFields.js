@@ -1,4 +1,4 @@
-import { IconButton, MenuItem, Stack, TextField } from '@mui/material'
+import { Divider, IconButton, MenuItem, Stack, TextField } from '@mui/material'
 import React,{useState,useEffect} from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -95,7 +95,8 @@ const FilterFields = ({setPosts, ogPosts}) => {
     <div>
         <TextField variant='standard' name="id" sx={{marginTop:"5px",width:"100px"}} autoFocus={(focus=="id")} onChange={handleChange} value={filters.id}/>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <div style={{display:"inline-flex",justifyContent:"space-around", width:'150px'}}>
+          <div style={{display:"inline-block",position:"relative", width:'150px'}}>
+          <div style={{display:"inline-flex",justifyContent:"space-around",width:"150px"}}>
             <div style={{maxWidth:44, overflow:"hidden", display:"inline-block", padding:"0px", borderRadius:"50%"}}>
               <DesktopDatePicker
                 inputFormat='dd/MM/yy'
@@ -115,6 +116,8 @@ const FilterFields = ({setPosts, ogPosts}) => {
                 renderInput={(params)=><TextField variant='standard' sx={{marginTop:"5px", transform:"translateX(-14.5px)"}} {...params}/>}
               />
             </div>
+          </div>
+          <hr  style={{position:"relative",bottom:"0.5px",left:"0", margin:"0", padding:"0", borderTop:"none", background:"black"} }/>
           </div>
         </LocalizationProvider>
         <TextField variant='standard' name="distributor_name" sx={{marginTop:"5px",width:"200px"}} autoFocus={(focus=="distributor_name")} onChange={handleChange} value={filters.distributor_name}/>
