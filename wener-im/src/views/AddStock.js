@@ -13,6 +13,7 @@ const AddStock = () => {
 		{
       name1:"",
       name2:"",
+	  description:"",
       quantity:NaN,
       selling_price:NaN,
       cost:NaN,
@@ -73,6 +74,7 @@ const AddStock = () => {
 			name1:"",
 			name2:"",
 			quantity:NaN,
+			description:"",
 			selling_price:NaN,
 			cost:NaN,
 			product_type:"",
@@ -107,9 +109,6 @@ const AddStock = () => {
 		<div className='item-rows' >
 		<Grid container spacing={1.5} justifyContent="start" >
    
-			<Grid item xs={12} sm={2} md={1} sx={{width:"100%"}}>
-				<TextField label="id" name="id" value={data.id} disabled fullWidth size="small" sx={{background:"white"}}/>
-			</Grid>
 			<Grid item xs={12} sm={3} md={1.5}>
 				<Autocomplete
 					freeSolo
@@ -127,7 +126,10 @@ const AddStock = () => {
 				/>
 				
 			</Grid>
-			<Grid item xs={12} sm={2} md={1}>
+			<Grid item xs={12} sm={3} md={1.5}>
+				<TextField label="Description" name="description" value={data.description} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
+			</Grid>
+			<Grid item xs={12} sm={3} md={1.5}>
 				<TextField label="Quantity" type="number" name="quantity" value={data.quantity} fullWidth size="small" onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
 			<Grid item xs={12} sm={3} md={1.5}>
@@ -136,12 +138,12 @@ const AddStock = () => {
 			<Grid item xs={12} sm={2} md={1}>
 				<TextField label="Cost" name="cost" type="number" value={data.cost} fullWidth size="small"  onChange={(e)=>handleChange(e,i)} sx={{background:"white"}}/>
 			</Grid>
-			<Grid item xs={12} sm={2.5} md={1.5}>
+			<Grid item xs={12} sm={2.5} md={1}>
 				<Autocomplete
 					freeSolo
 					onChange={(e,value)=>handleAutoCompChange("product_type",value,i)}
 					options={options.product_type.map((option) => option)}
-					renderInput={(params) => <TextField {...params} label="product_type" name="product_type" onChange={(e)=>handleChange(e,i)} value={data.product_type} fullWidth size="small" sx={{background:"white"}}/>}
+					renderInput={(params) => <TextField {...params} label="Type" name="product_type" onChange={(e)=>handleChange(e,i)} value={data.product_type} fullWidth size="small" sx={{background:"white"}}/>}
 				/>
 			</Grid>
 			<Grid item xs={12} sm={2.5} md={1.5}>
