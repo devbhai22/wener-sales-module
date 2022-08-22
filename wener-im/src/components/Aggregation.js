@@ -9,9 +9,9 @@ const Aggregation = ({array, keys}) => {
         spacing={2}
         sx={{marginLeft:"15px", marginTop:"-40px"}}
     >
-        <span>Items: {array.length}</span>
+        <span>Items: {array.length.toLocaleString()}</span>
         {keys.map((key)=>
-            <span>{key.label}: {array.reduce((sum, el)=> sum + parseFloat(!el[key.key]?0:el[key.key]), 0)}</span>
+            <span>{key.label}: {array.reduce((sum, el)=> sum + parseFloat(!el[key.key]?0:el[key.key]), 0).toLocaleString()}</span>
         )}
     </Stack>
   )
