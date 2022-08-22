@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Container, Row } from "shards-react";
 import ReactTable from 'react-table';
-import { TextField, MenuItem, Box } from '@mui/material'
+import { TextField, MenuItem, Box, Tooltip } from '@mui/material'
 import EditProductModal from '../../components/editProductModal/EditProductModal';
 import supabase from '../../utils/supabase';
 import PageTitle from '../../components/common/PageTitle';
 import FilterFields from './FilterFields';
 import { DataGrid } from '@mui/x-data-grid';
 import Aggregation from '../../components/Aggregation';
+import TouchRipple from '@mui/material/ButtonBase/TouchRipple';
 
 const Stock = () => {
   
@@ -74,14 +75,6 @@ const Stock = () => {
   }, [filters])
   
 
-
-  const handleChange = (e)=>{
-    const {name, value}=e.target
-    console.log(name, value)
-    setFilters({...filters,[name]:value})
-    setFocus(name)
-  }
-
 const columns = [
   { field: 'id', headerName: 'ID', width: 80 },
   {
@@ -103,6 +96,7 @@ const columns = [
     headerName: 'Type',
     field: 'product_type',
     width: 120,
+    renderCell: ({value}) => <Tooltip title={value}><span>{value}</span></Tooltip>
   },
   {
     headerName: 'Cost',

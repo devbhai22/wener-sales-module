@@ -11,7 +11,7 @@ const Aggregation = ({array, keys}) => {
     >
         <span>Items: {array.length}</span>
         {keys.map((key)=>
-            <span>{key.label}: {array.reduce((sum, el)=>sum+parseFloat(el[key.key]),0)}</span>
+            <span>{key.label}: {array.reduce((sum, el)=> sum + parseFloat(!el[key.key]?0:el[key.key]), 0)}</span>
         )}
     </Stack>
   )
