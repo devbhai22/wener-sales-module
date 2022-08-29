@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Row } from "shards-react";
-import PageTitle from "../components/common/PageTitle";
-import supabase from "../utils/supabase";
+import PageTitle from "../../components/common/PageTitle";
+import supabase from "../../utils/supabase";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 

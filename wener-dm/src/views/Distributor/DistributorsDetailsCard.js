@@ -9,8 +9,8 @@ import {
   ButtonGroup
 } from "shards-react";
 import { useHistory } from "react-router-dom";
-import supabase from "../utils/supabase";
-import Loading from "../components/Loading/Loading";
+import supabase from "../../utils/supabase";
+import Loading from "../../components/Loading/Loading";
 
 const DistributorDetailsCard = ({ id }) => {
   const [distributor, setDistributor] = useState({});

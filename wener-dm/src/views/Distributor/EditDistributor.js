@@ -14,10 +14,10 @@ import {
   FormSelect,
   Button
 } from "shards-react";
-import PageTitle from "../components/common/PageTitle";
-import supabase from "../utils/supabase";
-import Loading from "../components/Loading/Loading";
-import useLocalStorage from "./useLocalStorage";
+import PageTitle from "../../components/common/PageTitle";
+import supabase from "../../utils/supabase";
+import Loading from "../../components/Loading/Loading";
+import useLocalStorage from "../Hooks/useLocalStorage";
 
 const EditDistributor = ({ match }) => {
   const [profile, setProfile] = useState({});

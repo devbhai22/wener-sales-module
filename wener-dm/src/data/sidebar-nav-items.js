@@ -43,6 +43,11 @@ export default function () {
       to: "/orders",
     },
     {
+      title: "Request Returns",
+      htmlBefore: '<i class="material-icons">edit</i>',
+      to: "/return-request",
+    },
+    {
       title: "Notifications",
       htmlBefore: '<i class="material-icons">notifications</i>',
       to: "/notifications",

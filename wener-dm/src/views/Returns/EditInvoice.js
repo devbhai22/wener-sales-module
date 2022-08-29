@@ -12,8 +12,8 @@ import {
   Container,
   FormTextarea
 } from "shards-react";
-import supabase from "../utils/supabase";
-import PageTitle from "../components/common/PageTitle";
+import supabase from "../../utils/supabase";
+import PageTitle from "../../components/common/PageTitle";
 import ProductForm from "./ProductForm";
 import ProductList from "./ProductList";
 import InvoiceInfo from "./InvoiceInfo";

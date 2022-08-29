@@ -6,21 +6,21 @@ import { DefaultLayout } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
-import UserProfileLite from "./views/UserProfileLite";
-import CreateDistributor from "./views/CreateDistributor";
-import Distributors from "./views/Distributors"
-import CreateInvoice from "./views/CreateInvoice";
-import Login from "./views/Login";
-import Logout from "./views/Logout";
-import Orders from "./views/Orders";
-import DistributorDetails from "./views/DistributorDetails";
-import OrderDetails from "./views/OrderDetails";
-import ReturnRequest from "./views/ReturnRequest";
-import EditInvoice from "./views/EditInvoice";
-import EditDistributor from "./views/EditDistributor";
-import PendingOrders from "./views/PendingOrders"
-import DailyOrders from "./views/DailyOrders";
-import Notifications from "./views/Notifications";
+import UserProfileLite from "./views/Profile/UserProfileLite";
+import CreateDistributor from "./views/Distributor/CreateDistributor";
+import Distributors from "./views/Distributor/Distributors"
+import CreateInvoice from "./views/Invoice/CreateInvoice";
+import Login from "./views/Auth/Login";
+import Logout from "./views/Auth/Logout";
+import Orders from "./views/Orders/Orders";
+import DistributorDetails from "./views/Distributor/DistributorDetails";
+import OrderDetails from "./views/Orders/OrderDetails";
+import EditInvoice from "./views/Invoice/EditInvoice";
+import EditDistributor from "./views/Distributor/EditDistributor";
+import PendingOrders from "./views/Orders/PendingOrders"
+import DailyOrders from "./views/Orders/DailyOrders";
+import Notifications from "./views/Notifications/Notifications";
+import ReturnRequest from "./views/Returns/ReturnRequest";
 
 export default [
   {
@@ -43,6 +43,12 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: CreateInvoice
+  },
+  {
+    path: "/return-request",
+    layout: DefaultLayout,
+    exact: true,
+    component: ReturnRequest
   },
   {
     path: "/distributors",
@@ -79,12 +85,6 @@ export default [
     layout: DefaultLayout,
     exact: true,
     component: PendingOrders
-  },
-  {
-    path: "/orders/:id/return-products",
-    layout: DefaultLayout,
-    exact: true,
-    component: ReturnRequest
   },
   {
     path: "/orders/:id/edit",

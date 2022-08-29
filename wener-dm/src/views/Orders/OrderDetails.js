@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from "shards-react";
 
-import PageTitle from "../components/common/PageTitle";
+import PageTitle from "../../components/common/PageTitle";
 import OrderDetailsCard from './OrderDetailsCard';
 import OrderDetailsTable from './OrderDetailsTable';
-import supabase from '../utils/supabase'
-import Loading from '../components/Loading/Loading'
+import supabase from '../../utils/supabase'
+import Loading from '../../components/Loading/Loading'
 
 const OrderDetails = ({ match }) => {
     const [products, setProducts] = useState([]);

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import supabase from '../utils/supabase'
+import supabase from '../../utils/supabase'
 import { Container } from "shards-react";
 
 const Logout = () => {

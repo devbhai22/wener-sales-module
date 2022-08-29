@@ -14,9 +14,9 @@ import {
   FormSelect,
   Button
 } from "shards-react";
-import PageTitle from "../components/common/PageTitle";
-import supabase from "../utils/supabase";
-import Loading from "../components/Loading/Loading"
+import PageTitle from "../../components/common/PageTitle";
+import supabase from "../../utils/supabase";
+import Loading from "../../components/Loading/Loading"
 
 const CreateDistributor = () => {
   const [profile, setProfile] = useState({});

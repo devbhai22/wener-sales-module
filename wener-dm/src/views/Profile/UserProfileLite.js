@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "shards-react";
-import PageTitle from "../components/common/PageTitle";
+import PageTitle from "../../components/common/PageTitle";
 import {
   Card,
   CardHeader,
@@ -9,7 +9,7 @@ import {
   ListGroupItem,
   Progress
 } from "shards-react";
-import supabase from "../utils/supabase";
+import supabase from "../../utils/supabase";
 
 const UserProfileLite = () => {
   const [profile, setProfile] = useState({})
