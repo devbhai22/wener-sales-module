@@ -113,7 +113,7 @@ const AddStock = () => {
 				<Autocomplete
 					freeSolo
 					onChange={(e,value)=>handleAutoCompChange("name1",value,i)}
-					options={options.name1.map((option) => option)}
+					options={options.name1.filter(option=>typeof option === "string" && option.length).map((option) => option)}
 					renderInput={(params) => <TextField {...params} label="Name 1" name="name1" onChange={(e)=>handleChange(e,i)} value={data.name1} fullWidth size="small" sx={{background:"white"}}/>}
 				/>
 			</Grid>
@@ -121,7 +121,7 @@ const AddStock = () => {
 				<Autocomplete
 					freeSolo
 					onChange={(e,value)=>handleAutoCompChange("name2",value,i)}
-					options={options.name2.map((option) => option)}
+					options={options.name2.filter(option=>typeof option === "string" && option.length).map((option) => option)}
 					renderInput={(params) => <TextField {...params} label="Name 2" name="name2" onChange={(e)=>handleChange(e,i)} value={data.name2} fullWidth size="small" sx={{background:"white"}}/>}
 				/>
 				
@@ -142,7 +142,7 @@ const AddStock = () => {
 				<Autocomplete
 					freeSolo
 					onChange={(e,value)=>handleAutoCompChange("product_type",value,i)}
-					options={options.product_type.map((option) => option)}
+					options={options.product_type.filter(option=>typeof option === "string" && option.length).map((option) => option)}
 					renderInput={(params) => <TextField {...params} label="Type" name="product_type" onChange={(e)=>handleChange(e,i)} value={data.product_type} fullWidth size="small" sx={{background:"white"}}/>}
 				/>
 			</Grid>
