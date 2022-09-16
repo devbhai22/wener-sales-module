@@ -10,7 +10,7 @@ import {
   ButtonGroup
 } from "shards-react";
 import { useHistory } from "react-router-dom";
-import supabase from "../utils/supabase";
+import supabase from "../../utils/supabase";
 
 const OrderDetailsCard = ({ id }) => {
   const [order, setOrder] = useState({});

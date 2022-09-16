@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Row } from "shards-react";
-import PageTitle from "../components/common/PageTitle";
-import supabase from "../utils/supabase";
+import PageTitle from "../../components/common/PageTitle";
+import supabase from "../../utils/supabase";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import ExportToExcel from "../components/Table/ExportToExcel";
+import ExportToExcel from "../../components/Table/ExportToExcel";
 
-const Orders = () => {
+const DailyOrders = () => {
   const [posts, setPosts] = useState([]);
 
   const history = useHistory();
@@ -29,7 +29,15 @@ const Orders = () => {
       let { data: orders, error } = await supabase
         .from("orders")
         .select("*")
-        .eq("division_id", profile[0].works_at);
+        .eq(
+          "invoice_data->>create_day",
+          new Date().toLocaleString("en-UK").split(",")[0]
+        )
+        .eq("division_id", profile[0].works_at)
+        .not('status', 'eq', 'Created By TSO')
+        .not('status', 'eq', 'Created By SR')
+        .not('status', 'eq', 'Rejected By ZSM')
+        .not('status', 'eq', 'Rejected By DM');
       if (error) {
         console.log(error);
       } else {
@@ -88,7 +96,7 @@ const Orders = () => {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
           );
-        }else if (props.original.status == "Created By SR") {
+        } else if (props.original.status == "Created By SR") {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
           );
@@ -196,4 +204,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default DailyOrders;

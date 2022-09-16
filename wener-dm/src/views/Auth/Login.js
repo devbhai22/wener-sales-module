@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Row, Col, Container, FormInput, Button, Card, CardHeader, ListGroup, ListGroupItem } from "shards-react";
-import supabase from '../utils/supabase'
+import supabase from '../../utils/supabase'
 
 const Login = () => {
   const [email, setEmail] = useState('')

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Col, Row, FormInput, FormSelect, FormTextarea } from "shards-react";
-import supabase from "../utils/supabase";
+import supabase from "../../utils/supabase";
 
 const InvoiceInfo = ({ invoiceInfo, setInvoiceInfo }) => {
   const [transportName, setTransportName] = useState("");

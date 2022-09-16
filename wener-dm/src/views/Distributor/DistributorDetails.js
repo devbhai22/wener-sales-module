@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from "shards-react";
 
-import PageTitle from "../components/common/PageTitle";
-import supabase from '../utils/supabase'
+import PageTitle from "../../components/common/PageTitle";
+import supabase from '../../utils/supabase'
 import DistributorDetailsCard from './DistributorsDetailsCard';
 
 const DistributorDetails = ({ match }) => {
