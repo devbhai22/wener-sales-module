@@ -13,12 +13,12 @@ import {
 } from "shards-react";
 import supabase from "../../utils/supabase";
 import PageTitle from "../../components/common/PageTitle";
-import ReturnProductForm from "../Returns/ReturnProductsForm";
-import ReturnsList from "./ReturnsList";
-import InvoiceInfo from "../Invoice/InvoiceInfo";
+import ProductForm from "./ProductForm";
+import ProductList from "../ProductList";
+import InvoiceInfo from "./InvoiceInfo";
 var numeral = require("numeral");
 
-const ReturnRequest = () => {
+const CreateInvoice = () => {
   //Invoice meta data
   const [distributorId, setDistributorId] = useState("");
   const [distributorName, setDistributorName] = useState("");
@@ -29,7 +29,7 @@ const ReturnRequest = () => {
   const [invoiceItems, setInvoiceItems] = useState([]);
   const [profile, setProfile] = useState({});
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
 
   //Edit invoice state
   const [editing, setEditing] = useState(false);
@@ -111,7 +111,7 @@ const ReturnRequest = () => {
           net_total: netTotal
         };
         const eventData = {
-          division_id: profile.works_at,
+          territory_id: profile.works_at,
           distributor_id: distributorId,
           distributor_name: distributorName,
           invoice_data: invoiceData
@@ -121,7 +121,7 @@ const ReturnRequest = () => {
 
         const { data, error } = await supabase.from("order_events").insert([
           {
-            name: "OrderCreatedByDM",
+            name: "OrderCreatedByTSO",
             created_by: profile.id,
             data: eventData
           }
@@ -184,7 +184,7 @@ const ReturnRequest = () => {
       let { data: distributors, error } = await supabase
         .from("distributors")
         .select("*")
-        .eq("division_id", profile[0]["works_at"]);
+        .eq("territory_id", profile[0]["works_at"]);
       if (error) {
         console.log(error);
       } else {
@@ -211,7 +211,7 @@ const ReturnRequest = () => {
       <Row noGutters className="page-header py-4">
         <PageTitle
           sm="12"
-          title="Return Request"
+          title="Create Invoice"
           subtitle="Orders"
           className="text-sm-left"
         />
@@ -272,12 +272,12 @@ const ReturnRequest = () => {
               <br></br>
 
               <Row form className="mt-1" style={{ alignItems: "flex-end" }}>
-                <ReturnProductForm
+                <ProductForm
                   invoiceItems={invoiceItems}
                   setInvoiceItems={setInvoiceItems}
-                  setError = {setError}
-                ></ReturnProductForm>
-                <ReturnsList
+                  setError={setError}
+                ></ProductForm>
+                <ProductList
                   handleNetTotal={handleNetTotal}
                   invoiceItems={invoiceItems}
                   setInvoiceItems={setInvoiceItems}
@@ -285,7 +285,7 @@ const ReturnRequest = () => {
                   setEditing={setEditing}
                   error={error}
                   setError={setError}
-                ></ReturnsList>
+                ></ProductList>
               </Row>
               <Col style={{ marginLeft: -10 }}>
                 <Row>
@@ -321,7 +321,7 @@ const ReturnRequest = () => {
                   }
                 }}
               >
-                Request Return
+                Create Invoice
               </Button>
             </Form>
           </ListGroupItem>
@@ -331,6 +331,4 @@ const ReturnRequest = () => {
   );
 };
 
-export default ReturnRequest;
-
-
+export default CreateInvoice;

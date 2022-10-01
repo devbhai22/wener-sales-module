@@ -15,7 +15,7 @@ import {
 import supabase from "../../utils/supabase";
 import PageTitle from "../../components/common/PageTitle";
 import ProductForm from "./ProductForm";
-import ProductList from "./ProductList";
+import ReturnsList from "./ReturnsList";
 import InvoiceInfo from "./InvoiceInfo";
 
 const EditInvoice = () => {
@@ -305,7 +305,7 @@ const EditInvoice = () => {
                   setInvoiceItems={setInvoiceItems}
                   setError = {setError}
                 ></ProductForm>
-                <ProductList
+                <ReturnsList
                   handleNetTotal={handleNetTotal}
                   invoiceItems={invoiceItems}
                   setInvoiceItems={setInvoiceItems}
@@ -313,7 +313,7 @@ const EditInvoice = () => {
                   setEditing={setEditing}
                   error = {error}
                   setError = {setError}
-                ></ProductList>
+                ></ReturnsList>
               </Row>
 
               <h5 className="my-2">Gross Total: {grossTotal}</h5>

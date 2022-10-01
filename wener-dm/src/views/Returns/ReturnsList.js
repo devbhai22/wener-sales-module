@@ -4,7 +4,7 @@ import { Col, FormInput, Button, Row } from "shards-react";
 import { useFormik } from "formik";
 var numeral = require("numeral");
 
-const ProductList = ({
+const ReturnsList = ({
   invoiceItems,
   setInvoiceItems,
   editing,
@@ -28,14 +28,13 @@ const ProductList = ({
   function collectData(index) {
     formik.values.productName = invoiceItems[index].product_name;
     formik.values.quantity = invoiceItems[index].quantity;
-    formik.values.unitPrice = invoiceItems[index].rate;
-    formik.values.totalAmount = invoiceItems[index].total_amount;
-    formik.values.fixedDiscount = invoiceItems[index].fixed_discount;
-    formik.values.percentageDiscount = invoiceItems[index].percentage_discount;
-    formik.values.percentageDiscountAmount =
-      invoiceItems[index].percentage_discount_amount;
-    formik.values.discountAmount = invoiceItems[index].discount_amount;
-    formik.values.netAmount = invoiceItems[index].net_amount;
+    formik.values.mrp = invoiceItems[index].mrp;
+    formik.values.invoiceValue = invoiceItems[index].invoice_value;
+    formik.values.totalValue = invoiceItems[index].total_value;
+    formik.values.expireDate = invoiceItems[index].expire_date;
+    formik.values.reasonOfRefund = invoiceItems[index].reason_of_refund;
+    formik.values.sku = invoiceItems[index].sku;
+    formik.values.comments = invoiceItems[index].comments;
   }
 
   function handleEdit(index, e) {
@@ -43,18 +42,13 @@ const ProductList = ({
       e.preventDefault();
       invoiceItems[index].product_name = formik.values.productName;
       invoiceItems[index].quantity = Number(formik.values.quantity);
-      invoiceItems[index].rate = Number(formik.values.unitPrice);
-      invoiceItems[index].total_amount = Number(formik.values.totalAmount);
-      invoiceItems[index].fixed_discount = Number(formik.values.fixedDiscount);
-      invoiceItems[index].percentage_discount =
-        formik.values.percentageDiscount;
-      invoiceItems[index].percentage_discount_amount = Number(
-        formik.values.percentageDiscountAmount
-      );
-      invoiceItems[index].discount_amount = Number(
-        formik.values.discountAmount
-      );
-      invoiceItems[index].net_amount = Number(formik.values.netAmount);
+      invoiceItems[index].mrp = Number(formik.values.mrp);
+      invoiceItems[index].invoice_value = Number(formik.values.invoiceValue);
+      invoiceItems[index].total_value = Number(formik.values.totalValue);
+      invoiceItems[index].expire_date = formik.values.expireDate;
+      invoiceItems[index].reason_of_refund = formik.values.reasonOfRefund
+      invoiceItems[index].sku = formik.values.sku
+      invoiceItems[index].comments = formik.values.comments
       handleNetTotal();
       setEditing(false);
       invoiceItems[index].editing = false;
@@ -64,24 +58,14 @@ const ProductList = ({
   }
 
   useEffect(() => {
-    formik.values.totalAmount =
-      formik.values.quantity * formik.values.unitPrice;
-    formik.values.percentageDiscountAmount =
-      (formik.values.percentageDiscount / 100) * formik.values.totalAmount;
-    formik.values.discountAmount =
-      formik.values.fixedDiscount + formik.values.percentageDiscountAmount;
-    formik.values.netAmount =
-      formik.values.totalAmount - formik.values.discountAmount;
-    formik.values.netAmount = numeral(formik.values.netAmount).format("0[.]00");
-    if (formik.values.netAmount != 0) {
+    formik.values.totalValue =
+      formik.values.mrp * formik.values.quantity;
+    if (formik.values.totalAmount != 0 || formik.values.totalAmount != 0) {
       formik.values.totalAmount = numeral(formik.values.totalAmount).format(
         "0[.]00"
       );
-      formik.values.discountAmount = numeral(
-        formik.values.discountAmount
-      ).format("0[.]00");
-      formik.values.percentageDiscountAmount = numeral(
-        formik.values.percentageDiscountAmount
+      formik.values.invoiceValue = numeral(
+        formik.values.invoiceValue
       ).format("0[.]00");
     }
   });
@@ -157,103 +141,103 @@ const ProductList = ({
         </Col>
 
         <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="unitPrice">Unit Price</label>
+          <label htmlFor="mrp">MRP</label>
           <FormInput
-            name="unitPrice"
+            name="mrp"
             type="number"
             onChange={formik.handleChange}
             value={
               invoiceItems[index].editing
-                ? formik.values.unitPrice
-                : invoiceItems[index].rate
+                ? formik.values.mrp
+                : invoiceItems[index].mrp
             }
             disabled={invoiceItems[index].editing ? false : true}
           />
         </Col>
 
         <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="totalAmount">Total Amount</label>
+          <label htmlFor="totalAmount">Invoice Value</label>
           <FormInput
             name="unitPrice"
             type="number"
-            value={invoiceItems[index].quantity * invoiceItems[index].rate}
-            disabled
+            value={invoiceItems[index].invoice_value}
+            disabled={invoiceItems[index].editing ? false : true}
           />
         </Col>
 
         <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="percentageDiscount">Percentage Discount</label>
+          <label htmlFor="percentageDiscount">Total Value</label>
           <FormInput
             name="percentageDiscount"
             type="number"
             onChange={formik.handleChange}
             value={
               invoiceItems[index].editing
-                ? formik.values.percentageDiscount
-                : invoiceItems[index].percentage_discount
+                ? formik.values.totalValue
+                : invoiceItems[index].total_value
             }
-            disabled={invoiceItems[index].editing ? false : true}
+            disabled
           />
         </Col>
 
         <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="percentageDiscountAmount">
-            Percentage Discount Amount
+          <label htmlFor="expireDate">
+            Expire Date
           </label>
           <FormInput
             name="percentageDiscountAmount"
-            type="number"
+            type="date"
             onChange={formik.handleChange}
             value={
               invoiceItems[index].editing
-                ? formik.values.percentageDiscountAmount
-                : invoiceItems[index].percentage_discount_amount
-            }
-            disabled
-          />
-        </Col>
-
-        <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="fixedDiscount">Fixed Discount</label>
-          <FormInput
-            name="fixedDiscount"
-            type="number"
-            onChange={formik.handleChange}
-            value={
-              invoiceItems[index].editing
-                ? formik.values.fixedDiscount
-                : invoiceItems[index].fixed_discount
+                ? formik.values.expireDate
+                : invoiceItems[index].expire_date
             }
             disabled={invoiceItems[index].editing ? false : true}
           />
         </Col>
 
         <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="discountAmount">Discount Amount</label>
+          <label htmlFor="reasonOfRefund">Reason of Refund</label>
           <FormInput
-            name="discountAmount"
-            type="number"
+            name="reasonOfRefund"
+            type="text"
             onChange={formik.handleChange}
             value={
               invoiceItems[index].editing
-                ? formik.values.discountAmount
-                : invoiceItems[index].discount_amount
+                ? formik.values.reasonOfRefund
+                : invoiceItems[index].reason_of_refund
             }
-            disabled
+            disabled={invoiceItems[index].editing ? false : true}
           />
         </Col>
 
         <Col md="3" sm={4} xs={5} className="form-group">
-          <label htmlFor="netAmount">Net Amount</label>
+          <label htmlFor="discountAmount">Every SKU checked by Company Representative</label>
           <FormInput
-            name="productName"
-            type="number"
+            name="sku"
+            type="text"
+            onChange={formik.handleChange}
             value={
               invoiceItems[index].editing
-                ? formik.values.netAmount
-                : invoiceItems[index].net_amount
+                ? formik.values.sku
+                : invoiceItems[index].sku
             }
-            disabled
+            disabled={invoiceItems[index].editing ? false : true}
+          />
+        </Col>
+
+        <Col md="3" sm={4} xs={5} className="form-group">
+          <label htmlFor="netAmount">Comments</label>
+          <FormInput
+            name="comments"
+            type="text"
+            value={
+              invoiceItems[index].editing
+                ? formik.values.comments
+                : invoiceItems[index].comments
+            }
+            disabled={invoiceItems[index].editing ? false : true}
           />
         </Col>
 
@@ -311,4 +295,4 @@ const ProductList = ({
   });
 };
 
-export default ProductList;
+export default ReturnsList;
