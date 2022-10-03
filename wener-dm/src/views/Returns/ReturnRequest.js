@@ -15,7 +15,7 @@ import supabase from "../../utils/supabase";
 import PageTitle from "../../components/common/PageTitle";
 import ReturnProductForm from "../Returns/ReturnProductsForm";
 import ReturnsList from "./ReturnsList";
-import InvoiceInfo from "../Invoice/InvoiceInfo";
+import InvoiceInfo from "./ReturnsInfo";
 var numeral = require("numeral");
 
 const ReturnRequest = () => {
