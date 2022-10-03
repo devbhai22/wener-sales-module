@@ -1,4 +1,4 @@
-import { Divider, IconButton, MenuItem, Stack, TextField } from '@mui/material'
+import { Autocomplete, Divider, IconButton, MenuItem, Stack, TextField } from '@mui/material'
 import React,{useState,useEffect} from 'react'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -22,10 +22,7 @@ const FilterFields = ({setStocks, ogStocks}) => {
     setFilters({...filters,[name]:value})
     setFocus(name)
   }
-//   const handleDateChange = (value, name)=>{
-//     setFilters({...filters,[name]:value})
-//     setFocus(name)
-//   }
+
   const reset = () => {
     setFilters({
         id:NaN,
@@ -57,7 +54,7 @@ const FilterFields = ({setStocks, ogStocks}) => {
         filteredPosts=filteredPosts.filter(({description})=>description.toLowerCase().includes(filters.description.toLowerCase()))
       }
       if(filters.product_type){ //perfect match
-        filteredPosts=filteredPosts.filter(({product_type})=>product_type==filters.product_type)
+        filteredPosts=filteredPosts.filter(({product_type})=>product_type.toLowerCase().includes(filters.product_type.toLowerCase()))
       }
       if(filters.minCost||filters.maxCost){ //range
         if(filters.minCost && !filters.maxCost){//only start
@@ -102,13 +99,13 @@ const FilterFields = ({setStocks, ogStocks}) => {
         <TextField variant='standard' name="name1" sx={{marginTop:"5px",width:"120px"}} autoFocus={(focus=="name1")} onChange={handleChange} value={filters.name1}/>
         <TextField variant='standard' name="name2" sx={{marginTop:"5px",width:"120px"}} autoFocus={(focus=="name2")} onChange={handleChange} value={filters.name2}/>
         <TextField variant='standard' name="description" sx={{marginTop:"5px",width:"120px"}} autoFocus={(focus=="description")} onChange={handleChange} value={filters.description}/>
-        <TextField select variant='standard' name="product_type" sx={{marginTop:"5px", width:"120px"}} autoFocus={(focus=="product_type")} onChange={handleChange} value={filters.product_type}>
-        {["Created By DM","Approved By DM","Rejected By IM","Order Dispatched"].map(option=>(
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-        </TextField>
+        <Autocomplete
+          sx={{display:"inline"}}
+					freeSolo
+					onChange={(e,value)=>setFilters({...filters,product_type:value})}
+					options={[...new Set(ogStocks.map((stock)=>stock.product_type))].map((option) => option)}
+					renderInput={(params) => <TextField {...params} name="product_type" onChange={handleChange} value={filters.product_type} variant='standard' sx={{marginTop:"5px", width:"120px"}}/>}
+				/>
         <TextField variant='standard' name="minCost" sx={{marginTop:"5px",width:"60px"}} autoFocus={(focus=="minCost")} onChange={handleChange} value={filters.minCost}/>
         <TextField variant='standard' name="maxCost" sx={{marginTop:"5px",width:"60px"}} autoFocus={(focus=="maxCost")} onChange={handleChange} value={filters.maxCost}/>
         <TextField variant='standard' name="minPrice" sx={{marginTop:"5px",width:"60px"}} autoFocus={(focus=="minPrice")} onChange={handleChange} value={filters.minPrice}/>
