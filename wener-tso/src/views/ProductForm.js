@@ -1,9 +1,24 @@
-import React, { useEffect } from "react";
-import { Col, Row, FormInput, Form } from "shards-react";
+import React, { useEffect, useState } from "react";
+import { Col, Row, FormInput, Form, FormSelect} from "shards-react";
 import { useFormik } from "formik";
+import supabase from "../utils/supabase";
 var numeral = require('numeral');
 
-const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
+const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
+
+  const [options, setOptions] = useState([])
+  const [current, setCurrent] = useState([])
+
+  useEffect(() => {
+    async function fetchData() {
+      let { data: stock_summary, error } = await supabase
+        .from('stock_summary')
+        .select('*')
+      setOptions(stock_summary)
+    }
+    fetchData();
+  }, []);
+
   var arrayItems = [];
 
   let invoiceItem = {
@@ -103,12 +118,11 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
           ></Col>
           <Col md="6" sm={7} xs={8} className="form-group">
             <label htmlFor="productName">Product Name</label>
-            <FormInput
-              name="productName"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.productName}
-            />
+              <FormSelect id="feInputState" value={current} onChange={(e) => setCurrent(e.target.value)}>
+                  {options?options.map((data)=>(
+                    <option value={data.id} key = {data.id}>{data.name2}</option>
+                  )):null}
+                </FormSelect>
           </Col>
           <Col md="3" sm={7} xs={8} className="form-group">
             <label htmlFor="quantity">Quantity</label>
