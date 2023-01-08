@@ -122,7 +122,7 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
                   {options?options.map((data)=>(
                     <option value={data.id} key = {data.id}>{data.name2}</option>
                   )):null}
-                </FormSelect>
+              </FormSelect>
           </Col>
           <Col md="3" sm={7} xs={8} className="form-group">
             <label htmlFor="quantity">Quantity</label>
