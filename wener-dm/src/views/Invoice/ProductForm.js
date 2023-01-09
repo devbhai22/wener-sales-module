@@ -1,23 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row, FormInput, Form, FormSelect } from "shards-react";
+import { Autocomplete, TextField } from '@mui/material';
+import supabase from "../../utils/supabase";
 import { useFormik } from "formik";
 var numeral = require('numeral');
 
 const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
 
-  const [options, setOptions] = useState([])
-  const [current, setCurrent] = useState([])
+  const [options, setOptions] = useState(null)
+  const [productName, setProductName] = useState("")
+
+  const handleName = (e, i) => {
+    setProductName(i)
+  }
+
+  const handleInnerName = (e) => {
+    setProductName(e.target.value)
+  }
 
   useEffect(() => {
     async function fetchData() {
       let { data: stock_summary, error } = await supabase
         .from('stock_summary')
-        .select('*')
-      setOptions(stock_summary)
+        .select('name2')
+      const arr = []
+      stock_summary.forEach((data)=>arr.push(data.name2))
+      setOptions(arr)
     }
     fetchData();
   }, []);
-  
+
   var arrayItems = [];
 
   let invoiceItem = {
@@ -87,7 +99,7 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
     },
     onSubmit: values => {
       var newItem = Object.create(invoiceItem);
-      newItem.product_name = values.productName;
+      newItem.product_name = productName;
       newItem.quantity = Number(values.quantity);
       newItem.rate = Number(values.unitPrice);
       newItem.total_amount = Number(values.totalAmount);
@@ -104,8 +116,11 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
     }
   });
 
+  console.log(options)
+
   return (
     <>
+    {options?
       <Form>
         <Row form className="mt-1" style={{ alignItems: "flex-end" }}>
           <Col
@@ -117,11 +132,25 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
           ></Col>
           <Col md="6" sm={7} xs={8} className="form-group">
             <label htmlFor="productName">Product Name</label>
-              <FormSelect id="feInputState" value={current} onChange={(e) => setCurrent(e.target.value)}>
+            <Autocomplete
+            options={options.filter(option=>typeof option === "string" && option.length).map((option) => option)}
+            renderInput={(params) => <TextField {...params} onChange = {(e) => {handleInnerName(e)}} value = {productName}/>}
+            onChange = {(e, i)=>{handleName(e, i)}}
+          />
+              {/*<FormSelect name="productName" type="text" value={formik.values.productName} onChange={formik.handleChange}>
+                <option>
+                  No value
+                </option>
                   {options?options.map((data)=>(
-                    <option value={data.id} key = {data.id}>{data.name2}</option>
+                    <option key = {data.id}>{data.name2}</option>
                   )):null}
               </FormSelect>
+              <FormInput
+                name="productName"
+                type="text"
+                onChange={formik.handleChange}
+                value={formik.values.productName}
+                  />*/}
           </Col>
           <Col md="3" sm={7} xs={8} className="form-group">
             <label htmlFor="quantity">Quantity</label>
@@ -224,7 +253,7 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
             }}
           ></Col>
         </Row>
-      </Form>
+      </Form>:null}
     </>
   );
 };
