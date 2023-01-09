@@ -137,20 +137,6 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
             renderInput={(params) => <TextField {...params} onChange = {(e) => {handleInnerName(e)}} value = {productName}/>}
             onChange = {(e, i)=>{handleName(e, i)}}
           />
-              {/*<FormSelect name="productName" type="text" value={formik.values.productName} onChange={formik.handleChange}>
-                <option>
-                  No value
-                </option>
-                  {options?options.map((data)=>(
-                    <option key = {data.id}>{data.name2}</option>
-                  )):null}
-              </FormSelect>
-              <FormInput
-                name="productName"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.productName}
-                  />*/}
           </Col>
           <Col md="3" sm={7} xs={8} className="form-group">
             <label htmlFor="quantity">Quantity</label>
