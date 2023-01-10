@@ -1,31 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, FormInput, Form, FormSelect} from "shards-react";
-import { Autocomplete, TextField } from '@mui/material';
+import { Col, Row, FormInput, Form, FormSelect } from "shards-react";
+import { Autocomplete, TextField } from "@mui/material";
 import { useFormik } from "formik";
 import supabase from "../utils/supabase";
-var numeral = require('numeral');
+var numeral = require("numeral");
 
-const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
-
-  const [options, setOptions] = useState([])
-  const [productName, setProductName] = useState("")
+const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
+  const [options, setOptions] = useState([]);
+  const [productName, setProductName] = useState("");
 
   const handleName = (e, i) => {
-    setProductName(i)
-  }
+    setProductName(i);
+  };
 
-  const handleInnerName = (e) => {
-    setProductName(e.target.value)
-  }
+  const handleInnerName = e => {
+    setProductName(e.target.value);
+  };
 
   useEffect(() => {
     async function fetchData() {
       let { data: stock_summary, error } = await supabase
-        .from('stock_summary')
-        .select('name2')
-      const arr = []
-      stock_summary.forEach((data)=>arr.push(data.name2))
-      setOptions(arr)
+        .from("stock_summary")
+        .select("name1, name2");
+      const arr = [];
+      stock_summary.forEach(data => arr.push(data.name1 + " " + data.name2));
+      setOptions(arr);
     }
     fetchData();
   }, []);
@@ -55,11 +54,17 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
       formik.values.fixedDiscount + formik.values.percentageDiscountAmount;
     formik.values.netAmount =
       formik.values.totalAmount - formik.values.discountAmount;
-    formik.values.netAmount = numeral(formik.values.netAmount).format('0[.]00')
-    if(formik.values.netAmount != 0){
-    formik.values.totalAmount = numeral(formik.values.totalAmount).format('0[.]00')
-    formik.values.discountAmount = numeral(formik.values.discountAmount).format('0[.]00')
-    formik.values.percentageDiscountAmount = numeral(formik.values.percentageDiscountAmount).format('0[.]00')
+    formik.values.netAmount = numeral(formik.values.netAmount).format("0[.]00");
+    if (formik.values.netAmount != 0) {
+      formik.values.totalAmount = numeral(formik.values.totalAmount).format(
+        "0[.]00"
+      );
+      formik.values.discountAmount = numeral(
+        formik.values.discountAmount
+      ).format("0[.]00");
+      formik.values.percentageDiscountAmount = numeral(
+        formik.values.percentageDiscountAmount
+      ).format("0[.]00");
     }
   });
 
@@ -88,13 +93,14 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
       }
       if (!values.percentageDiscount) {
         values.percentageDiscount = 0;
-      } else if (values.percentageDiscount>100){
-        errors.percentageDiscount = "Percentage discount cannot be greater than 100";
+      } else if (values.percentageDiscount > 100) {
+        errors.percentageDiscount =
+          "Percentage discount cannot be greater than 100";
       }
       if (!values.fixedDiscount) {
         values.fixedDiscount = 0;
       }
-      setError(errors)
+      setError(errors);
       return errors;
     },
     onSubmit: values => {
@@ -105,7 +111,9 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
       newItem.total_amount = Number(values.totalAmount);
       newItem.fixed_discount = Number(values.fixedDiscount);
       newItem.percentage_discount = Number(values.percentageDiscount);
-      newItem.percentage_discount_amount = Number(values.percentageDiscountAmount);
+      newItem.percentage_discount_amount = Number(
+        values.percentageDiscountAmount
+      );
       newItem.discount_amount = Number(values.discountAmount);
       newItem.net_amount = Number(values.netAmount);
       newItem.product_id = new Date().getTime();
@@ -130,10 +138,22 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError}) => {
           <Col md="6" sm={7} xs={8} className="form-group">
             <label htmlFor="productName">Product Name</label>
             <Autocomplete
-            options={options.filter(option=>typeof option === "string" && option.length).map((option) => option)}
-            renderInput={(params) => <TextField {...params} onChange = {(e) => {handleInnerName(e)}} value = {productName}/>}
-            onChange = {(e, i)=>{handleName(e, i)}}
-          />
+              options={options
+                .filter(option => typeof option === "string" && option.length)
+                .map(option => option)}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  onChange={e => {
+                    handleInnerName(e);
+                  }}
+                  value={productName}
+                />
+              )}
+              onChange={(e, i) => {
+                handleName(e, i);
+              }}
+            />
           </Col>
           <Col md="3" sm={7} xs={8} className="form-group">
             <label htmlFor="quantity">Quantity</label>
