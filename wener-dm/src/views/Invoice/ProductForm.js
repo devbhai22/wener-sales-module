@@ -21,11 +21,11 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
   useEffect(() => {
     async function fetchData() {
       let { data: stock_summary, error } = await supabase
-        .from('stock_summary')
-        .select('name2')
-      const arr = []
-      stock_summary.forEach((data)=>arr.push(data.name2))
-      setOptions(arr)
+        .from("stock_summary")
+        .select("name1, name2");
+      const arr = [];
+      stock_summary.forEach(data => arr.push(data.name1 + " " + data.name2));
+      setOptions(arr);
     }
     fetchData();
   }, []);
