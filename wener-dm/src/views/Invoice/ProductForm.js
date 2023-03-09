@@ -22,7 +22,8 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
     async function fetchData() {
       let { data: stock_summary, error } = await supabase
         .from("stock_summary")
-        .select("name1, name2");
+        .select("name1, name2")
+        .order("name1", { ascending: true });
       const arr = [];
       stock_summary.forEach(data => arr.push(data.name1 + " " + data.name2));
       setOptions(arr);
