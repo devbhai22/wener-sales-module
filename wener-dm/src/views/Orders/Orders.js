@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Container, Row } from "shards-react";
 import PageTitle from "../../components/common/PageTitle";
@@ -9,36 +9,82 @@ import ExportToExcel from "../../components/Table/ExportToExcel";
 
 const Orders = () => {
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const history = useHistory();
   const user = supabase.auth.user();
 
   useEffect(() => {
-    async function fetchData() {
-      let { data: profile, error1 } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id);
-      if (error1) {
-        console.log(error1);
-      } else {
-        console.log(profile[0]);
-        // setProfile(profile[0])
-      }
+    fetchData();
+  }, [page]);
 
+  async function fetchData() {
+    if (!supabase || !supabase.from || typeof supabase.from !== "function") {
+      console.error("Supabase is not correctly set up.");
+      return;
+    }
+
+    let { data: profile, error1 } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", user.id);
+
+    if (error1) {
+      console.log(error1);
+      return;
+    }
+
+    const PAGE_SIZE = 1000;
+    const offset = (page - 1) * PAGE_SIZE;
+
+    try {
       let { data: orders, error } = await supabase
         .from("orders")
         .select("*")
-        .eq("division_id", profile[0].works_at);
+        .eq("division_id", profile[0].works_at)
+        .order("id", { ascending: false }) // Add this line to order by id in descending order
+        .range(offset, offset + PAGE_SIZE - 1);
+
+      console.log("Orders:", orders); // Log orders data to check API response
+
       if (error) {
-        console.log(error);
+        console.log("Error fetching orders:", error); // Log API error if any
       } else {
-        console.log(orders, "<----- these are the orders");
+        console.log("Orders:", orders, "<----- these are the orders");
         setPosts(orders);
+
+        // Fetch the total count of items
+        let { data: totalCountData, error: countError } = await supabase
+          .from("orders")
+          .select("count(*)")
+          .eq("division_id", profile[0].works_at);
+
+        if (countError) {
+          console.log("Error fetching count:", countError);
+          return;
+        }
+
+        const totalCount = totalCountData[0].count;
+        const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+        setTotalPages(totalPages);
       }
+    } catch (e) {
+      console.error("Error fetching data:", e);
     }
-    fetchData();
-  }, []);
+  }
+
+  function handleNextPage() {
+    if (page < totalPages) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }
+
+  function handlePrevPage() {
+    if (page > 1) {
+      setPage((prevPage) => prevPage - 1);
+    }
+  }
 
   const columns = [
     {
@@ -76,35 +122,35 @@ const Orders = () => {
         textAlign: "center"
       },
       Cell: props => {
-        if (props.original.status == "Created By DM") {
+        if (props.original.status === "Created By DM") {
           return (
             <span style={{ color: "#33cc33" }}> {props.original.status}</span>
           );
-        } else if (props.original.status == "Approved By DM") {
+        } else if (props.original.status === "Approved By DM") {
           return (
             <span style={{ color: "#33cc33" }}> {props.original.status}</span>
           );
-        } else if (props.original.status == "Created By TSO") {
+        } else if (props.original.status === "Created By TSO") {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
           );
-        }else if (props.original.status == "Created By SR") {
+        }else if (props.original.status === "Created By SR") {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
           );
-        } else if (props.original.status == "Approved By ZSM") {
+        } else if (props.original.status === "Approved By ZSM") {
           return (
             <span style={{ color: "#ffcc00" }}> {props.original.status}</span>
           );
-        } else if (props.original.status == "Rejected By ZSM") {
+        } else if (props.original.status === "Rejected By ZSM") {
           return (
             <span style={{ color: "#ff3300" }}> {props.original.status}</span>
           );
-        } else if (props.original.status == "Order Dispatched") {
+        } else if (props.original.status === "Order Dispatched") {
           return (
             <span style={{ color: "#33cc33" }}> {props.original.status}</span>
           );
-        } else if (props.original.status == "Rejected By DM") {
+        } else if (props.original.status === "Rejected By DM") {
           return (
             <span style={{ color: "#ff3300" }}> {props.original.status}</span>
           );
@@ -124,15 +170,13 @@ const Orders = () => {
         justifyContent: "center",
         display: "flex"
       },
-      Cell: props => {
+      Cell: (props) => {
         return (
           <button
             className="btn btn-primary btn-sm"
             style={{ cursor: "pointer" }}
-            onClick={e => {
+            onClick={(e) => {
               history.push(`/orders/${props.original.id}`);
-              // console.log(e);
-              // console.log(props);
             }}
           >
             Details
@@ -168,7 +212,7 @@ const Orders = () => {
           style={{ background: "white" }}
         >
           {(state, makeTable, instance) => {
-            let reactTable = state.pageRows.map(modem => {
+            let reactTable = state.pageRows.map((modem) => {
               return modem._original;
             });
             return (
@@ -179,6 +223,16 @@ const Orders = () => {
             );
           }}
         </ReactTable>
+
+        {/* Pagination buttons */}
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <button onClick={handlePrevPage} disabled={page === 1}>
+            Previous
+          </button>
+          <button onClick={handleNextPage} disabled={page === totalPages}>
+            Next
+          </button>
+        </div>
       </Container>
       <style>{`
       .-btn{
