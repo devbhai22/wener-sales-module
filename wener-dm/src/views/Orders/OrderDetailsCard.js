@@ -217,7 +217,8 @@ const OrderDetailsCard = ({ id }) => {
         ) : null}
 
         {order.status === "Approved By ZSM" ||
-        order.status === "Created By TSO" ? (
+        order.status === "Created By TSO" ||
+        order.status === "Created By SR" ? (
           <>
             <Button
               className="m-1"

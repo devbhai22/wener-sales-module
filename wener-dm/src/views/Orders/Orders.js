@@ -55,17 +55,18 @@ const Orders = () => {
         setPosts(orders);
 
         // Fetch the total count of items
-        let { data: totalCountData, error: countError } = await supabase
-          .from("orders")
-          .select("count(*)")
-          .eq("division_id", profile[0].works_at);
-
+        // let { data: totalCountData, error: countError } = await supabase
+        //   .from("orders")
+        //   .select("count(*)")
+        //   .eq("division_id", profile[0].works_at);
+        let { totalCountData , countError } = await supabase.rpc('count_order')
+        console.log("Total count:", totalCountData); // Log total count to check API response
         if (countError) {
           console.log("Error fetching count:", countError);
           return;
         }
 
-        const totalCount = totalCountData[0].count;
+        const totalCount = totalCountData;
         const totalPages = Math.ceil(totalCount / PAGE_SIZE);
         setTotalPages(totalPages);
       }

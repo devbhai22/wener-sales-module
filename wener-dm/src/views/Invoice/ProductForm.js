@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, FormInput, Form, FormSelect } from "shards-react";
+import { Col, Row, FormInput, Form } from "shards-react";
 import { Autocomplete, TextField } from '@mui/material';
 import supabase from "../../utils/supabase";
 import { useFormik } from "formik";
@@ -20,7 +20,7 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
 
   useEffect(() => {
     async function fetchData() {
-      let { data: stock_summary, error } = await supabase
+      let { data: stock_summary } = await supabase
         .from("stock_summary")
         .select("name1, name2")
         .order("name1", { ascending: true });
@@ -57,7 +57,7 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
     formik.values.netAmount =
       formik.values.totalAmount - formik.values.discountAmount;
     formik.values.netAmount = numeral(formik.values.netAmount).format('0[.]00')
-    if(formik.values.netAmount != 0){
+    if(formik.values.netAmount !== 0){
     formik.values.totalAmount = numeral(formik.values.totalAmount).format('0[.]00')
     formik.values.discountAmount = numeral(formik.values.discountAmount).format('0[.]00')
     formik.values.percentageDiscountAmount = numeral(formik.values.percentageDiscountAmount).format('0[.]00')
