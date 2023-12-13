@@ -14,6 +14,7 @@ import Aggregation from "../../components/Aggregation";
 
 const Orders = () => {
   const [ogPosts, setOgPosts] = useState([])
+  const [page, setPage] = useState(1);
   const [posts,setPosts] = useState(ogPosts)
 
   const history = useHistory()
@@ -38,11 +39,14 @@ const Orders = () => {
         // console.log(profile[0])
         // setProfile(profile[0])
       }
-
+      const PAGE_SIZE = 1000;
+      const offset = (page - 1) * PAGE_SIZE;
       let { data: orders, error } = await supabase
         .from('orders')
         .select("*")
         .or('status.eq."Approved By DM",status.eq."Order Dispatched",status.eq."Rejected By IM"')
+        .order("id", { ascending: false })
+        .range(offset, offset + PAGE_SIZE - 1);
       if (error) {
         console.log(error)
       }
