@@ -7,5 +7,3 @@
   command = 'npm run build'  # Your build command if needed
   publish = 'public'  # Your static files directory
 
-[context.production.environment]
-  NODE_VERSION = '20'  # Use the Node.js version you need
