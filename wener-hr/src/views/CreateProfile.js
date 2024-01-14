@@ -58,7 +58,7 @@ const CreateProfile = () => {
         .eq('role', 'dm')
       setAllDms(dms)
       setLoading(false)
-      if ((role === 'zsm' || role === 'tso' || role === 'sr') && dms.length > 0) {
+      if ((role === 'zsm' || role === 'tso') && dms.length > 0) {
         // Zones
         let { data: zones, error2 } = await supabase
           .from('locations')
@@ -88,7 +88,7 @@ const CreateProfile = () => {
         // allZones(dms[0].id)
         console.log(zms)
         // get territories
-        if (role === 'tso' || role === 'sr' && zms.length > 0) {
+        if (role === 'tso' && zms.length > 0) {
           setZm(zms[0].id)
           let { data: territories, error } = await supabase
             .from('locations')
@@ -236,12 +236,12 @@ const CreateProfile = () => {
       setRole(e.target.value)
       console.log('zsm', e.target.value);
     }
-    else if (e.target.value === 'tso' || e.target.value === 'sr') {
+    else if (e.target.value === 'tso') {
       setRole(e.target.value)
       setIsLocationDisable(false)
       setIsDmDisable(false)
       setIsZmDisable(false)
-      console.log('tso/sr', e.target.value);
+      console.log('tso', e.target.value);
     }
 
     if (e.target.value === 'dm') {
@@ -350,30 +350,6 @@ const CreateProfile = () => {
           }
         }
       } else if (role === 'tso') {
-        if (zm !== '' && dm !== '' && location !== '') {
-          // user = supabase.auth.user()
-          const { profile, error3 } = await supabase
-            .from('profiles')
-            .insert([
-              {
-                id: user_id, name: name, works_under: zm, role: role, works_at: location, age: age, avatar_url: profilePicture, phone_number: phoneNumber, attachment_path: attachmentPath, joined_date: dateJoined
-              },
-            ])
-          if (error3) {
-            console.log(error3)
-          }
-          else {
-            console.log(profile);
-            // localStorage.setItem('supabase.auth.token', data)
-            // localStorage.setItem('name', current_name)
-            // localStorage.setItem('avatar_url', avatar_url)
-            history.push('/profiles')
-            //window.location.reload(false);
-
-          }
-        }
-      }
-      else if (role === 'sr') {
         if (zm !== '' && dm !== '' && location !== '') {
           // user = supabase.auth.user()
           const { profile, error3 } = await supabase
@@ -569,7 +545,6 @@ const CreateProfile = () => {
                             <option value='dm'>Divisional Manager</option>
                             <option value='zsm'>Zonal Sales Manager</option>
                             <option value='tso'>Territory Sales Officer</option>
-                            <option value='sr'>Sales Representative</option>
                           </FormSelect>
                         </Col>
 

@@ -150,7 +150,7 @@ const EditProfile = ({ match }) => {
                     }
                 }
 
-                if (profile[0].role === 'tso' ||  profile[0].role === 'sr' && profile[0].works_under) {
+                if (profile[0].role === 'tso' && profile[0].works_under) {
                     let { data: zms, error3 } = await supabase
                         .from('profiles')
                         .select('*')
@@ -189,7 +189,7 @@ const EditProfile = ({ match }) => {
             if (dms.length > 0) {
                 // setDm(dm ? dm : dms[0].id)
 
-                if (profile[0].role === 'tso' || profile[0].role === 'sr') {
+                if (profile[0].role === 'tso') {
                     fetchZmData(dms[0].id)
                 }
             }
@@ -302,12 +302,12 @@ const EditProfile = ({ match }) => {
                 setIsZmDisable(true)
                 console.log('zsm', role);
             }
-            else if (role === 'tso' || role === 'sr') {
+            else if (role === 'tso') {
                 //allDivisions()
                 setIsLocationDisable(false)
                 setIsDmDisable(false)
                 setIsZmDisable(false)
-                console.log('tso/sr', role);
+                console.log('tso', role);
             }
 
             if (role === 'dm') {
@@ -399,22 +399,6 @@ const EditProfile = ({ match }) => {
                     }
                 }
             } else if (role === 'tso') {
-                if (zm !== '' && dm !== '' && location !== '') {
-                    const { profile, error3 } = await supabase
-                        .from('profiles')
-                        .update({ name: name, works_under: zm, works_at: location, age: age, avatar_url: profilePicture, attachment_path: attachmentPath, phone_number:phoneNumber, location:location.name, joined_date:joinDate })
-                        .eq('id', user.id)
-                    if (error3) {
-                        console.log(error3)
-                    }
-                    else {
-                        console.log(profile);
-                        history.push('/profiles')
-
-                    }
-                }
-            }
-            else if (role === 'sr') {
                 if (zm !== '' && dm !== '' && location !== '') {
                     const { profile, error3 } = await supabase
                         .from('profiles')
