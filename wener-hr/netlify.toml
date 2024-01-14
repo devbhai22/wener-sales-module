@@ -2,3 +2,8 @@
     from = "/*"
     to = "/index.html"
     status = 200
+[build]
+  functions = 'netlify/functions'  # Path to your Netlify Functions directory
+  command = 'npm run build'  # Your build command if needed
+  publish = 'public'  # Your static files directory
+

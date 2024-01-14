@@ -34,7 +34,7 @@ class SidebarMainNavbar extends React.Component {
               <img
                 id="main-logo"
                 className="d-inline-block align-top mr-1"
-                style={{ maxWidth: "25px" }}
+                style={{ maxWidth: "75px" }}
                 src={require("../../../favicon.ico")}
               />
             </div>

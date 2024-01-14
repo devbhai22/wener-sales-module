@@ -321,7 +321,7 @@ const CreateProfile = () => {
       let user_id = {}
       setLoading(true)
       try{
-        let user_id = await axios.post('https://JubilantObviousDebuggers.yourboimti.repl.co/', {
+        let user_id = await axios.post('https://wenerbdhumanresources.netlify.app/.netlify/functions/signup/', {
           email: email + '@wenerbd.com',
           password: password,
           role:role

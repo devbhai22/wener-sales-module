@@ -24,7 +24,7 @@ const Orders = () => {
         console.log(error1)
       }
       else {
-        console.log(profile[0])
+        // console.log(profile[0])
         // setProfile(profile[0])
       }
 

@@ -1,9 +1,35 @@
-import React, { useEffect } from "react";
-import { Col, Row, FormInput, Form } from "shards-react";
+import React, { useEffect, useState } from "react";
+import { Col, Row, FormInput, Form, FormSelect } from "shards-react";
+import { Autocomplete, TextField } from '@mui/material';
 import { useFormik } from "formik";
+import supabase from "../utils/supabase";
 var numeral = require('numeral');
 
 const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
+
+  const [options, setOptions] = useState([])
+  const [productName, setProductName] = useState("")
+
+  const handleName = (e, i) => {
+    setProductName(i)
+  }
+
+  const handleInnerName = (e) => {
+    setProductName(e.target.value)
+  }
+
+  useEffect(() => {
+    async function fetchData() {
+      let { data: stock_summary, error } = await supabase
+        .from("stock_summary")
+        .select("name1, name2");
+      const arr = [];
+      stock_summary.forEach(data => arr.push(data.name1 + " " + data.name2));
+      setOptions(arr);
+    }
+    fetchData();
+  }, []);
+  
   var arrayItems = [];
 
   let invoiceItem = {
@@ -73,7 +99,7 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
     },
     onSubmit: values => {
       var newItem = Object.create(invoiceItem);
-      newItem.product_name = values.productName;
+      newItem.product_name = productName;
       newItem.quantity = Number(values.quantity);
       newItem.rate = Number(values.unitPrice);
       newItem.total_amount = Number(values.totalAmount);
@@ -103,12 +129,11 @@ const ProductForm = ({ invoiceItems, setInvoiceItems, setError }) => {
           ></Col>
           <Col md="6" sm={7} xs={8} className="form-group">
             <label htmlFor="productName">Product Name</label>
-            <FormInput
-              name="productName"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.productName}
-            />
+            <Autocomplete
+            options={options.filter(option=>typeof option === "string" && option.length).map((option) => option)}
+            renderInput={(params) => <TextField {...params} onChange = {(e) => {handleInnerName(e)}} value = {productName}/>}
+            onChange = {(e, i)=>{handleName(e, i)}}
+          />
           </Col>
           <Col md="3" sm={7} xs={8} className="form-group">
             <label htmlFor="quantity">Quantity</label>

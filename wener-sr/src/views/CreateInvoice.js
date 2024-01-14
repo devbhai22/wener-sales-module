@@ -121,7 +121,7 @@ const CreateInvoice = () => {
 
         const { data, error } = await supabase.from("order_events").insert([
           {
-            name: "OrderCreatedByTSO",
+            name: "OrderCreatedBySR",
             created_by: profile.id,
             data: eventData
           }

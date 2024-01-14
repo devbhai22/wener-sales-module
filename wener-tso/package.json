@@ -4,6 +4,10 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/material": "^5.11.3",
+    "@mui/styled-engine-sc": "^5.11.0",
     "@supabase/supabase-js": "^1.29.4",
     "camelize": "^1.0.0",
     "chart.js": "^2.7.3",
@@ -25,6 +29,7 @@
     "react-table": "^6.8.6",
     "shards-react": "^1.0.0",
     "shortid": "^2.2.14",
+    "styled-components": "^5.3.6",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
